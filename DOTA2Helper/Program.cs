@@ -33,6 +33,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+app.MapControllerRoute(name: "default", pattern: "{controller}/{action}");
 app.MapControllerRoute(name: "default", pattern: "{controller}/{action}/{id?}");
 
 app.Run();

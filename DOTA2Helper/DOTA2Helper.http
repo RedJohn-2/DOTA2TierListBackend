@@ -1,6 +1,0 @@
-@DOTA2Helper_HostAddress = http://localhost:5178
-
-GET {{DOTA2Helper_HostAddress}}/dota2tierlist/
-Accept: application/json
-
-###

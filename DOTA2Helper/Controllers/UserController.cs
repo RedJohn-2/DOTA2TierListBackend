@@ -7,6 +7,7 @@ using DOTA2TierList.Application.Mappers;
 
 namespace DOTA2TierList.API.Controllers
 {
+    [Route("[controller]")]
     public class UserController : Controller
     {
         public readonly UserService _userService;
@@ -18,7 +19,7 @@ namespace DOTA2TierList.API.Controllers
             _userMapper = userMapper;
         }
 
-        [HttpGet("id:long")]
+        [HttpGet("{id:long}")]
         public async Task<ActionResult> GetById(long id)
         {
             var user = await _userService.GetById(id);
@@ -27,9 +28,9 @@ namespace DOTA2TierList.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetByEmail(string name)
+        public async Task<ActionResult> GetByEmail(string email)
         {
-            var user = await _userService.GetByEmail(name);
+            var user = await _userService.GetByEmail(email);
             var response = _userMapper.ToUserResponse(user);
             return Json(response);
         }
