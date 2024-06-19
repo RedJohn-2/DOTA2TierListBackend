@@ -1,0 +1,6 @@
+@DOTA2TierList_HostAddress = http://localhost:5178
+
+GET {{DOTA2TierList_HostAddress}}/dota2tierlist/
+Accept: application/json
+
+###

@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34622.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DOTA2TierList.API", "DOTA2Helper\DOTA2TierList.API.csproj", "{FCA58C09-3038-4567-9E54-5696EBC6B8F8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DOTA2TierList.Logic", "Logic\DOTA2TierList.Logic.csproj", "{7DC2A343-CD02-44C9-92B1-C4B22FAF1123}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOTA2TierList.Application", "DOTA2TierList.Application\DOTA2TierList.Application.csproj", "{D6194333-8386-45B5-96D4-897040505EBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOTA2TierList.Persistence", "DOTA2TierList.Persistence\DOTA2TierList.Persistence.csproj", "{5FE1E15F-3972-4640-868D-29F1A526955D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FCA58C09-3038-4567-9E54-5696EBC6B8F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCA58C09-3038-4567-9E54-5696EBC6B8F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCA58C09-3038-4567-9E54-5696EBC6B8F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCA58C09-3038-4567-9E54-5696EBC6B8F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DC2A343-CD02-44C9-92B1-C4B22FAF1123}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DC2A343-CD02-44C9-92B1-C4B22FAF1123}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DC2A343-CD02-44C9-92B1-C4B22FAF1123}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DC2A343-CD02-44C9-92B1-C4B22FAF1123}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6194333-8386-45B5-96D4-897040505EBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6194333-8386-45B5-96D4-897040505EBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6194333-8386-45B5-96D4-897040505EBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6194333-8386-45B5-96D4-897040505EBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FE1E15F-3972-4640-868D-29F1A526955D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FE1E15F-3972-4640-868D-29F1A526955D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FE1E15F-3972-4640-868D-29F1A526955D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FE1E15F-3972-4640-868D-29F1A526955D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1AAA02A6-B179-4356-91A2-791A86CFB139}
+	EndGlobalSection
+EndGlobal
