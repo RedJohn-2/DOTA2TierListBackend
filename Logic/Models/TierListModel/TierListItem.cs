@@ -8,6 +8,8 @@ namespace DOTA2TierList.Logic.Models.TierListModel
 {
     public abstract class TierListItem
     {
+        public long Id { get; set; }
+        public string Name { get; set; } = string.Empty;
         public List<Tier> tiers { get; set; } = new();
     }
 }

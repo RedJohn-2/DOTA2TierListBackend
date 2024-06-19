@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DOTA2TierList.Persistence.Repository
 {
-    internal class UserRepository : IUserStore
+    public class UserRepository : IUserStore
     {
         public readonly ApplicationContext _db;
 
@@ -24,7 +24,7 @@ namespace DOTA2TierList.Persistence.Repository
             await _db.SaveChangesAsync();
         }
 
-        public async Task<User> GetByEmail(string email)
+        public async Task<User?> GetByEmail(string email)
         {
             User? user = await _db.Users.FirstOrDefaultAsync(x => x.Email == email);
 
@@ -41,7 +41,7 @@ namespace DOTA2TierList.Persistence.Repository
 
         public async Task<IReadOnlyList<User>> GetByName(string name)
         {
-            var users = _db.Users.Where(x => x.Name == name).ToList();
+            var users = await _db.Users.Where(x => x.Name == name).ToListAsync();
 
             return users;
         }

@@ -26,7 +26,7 @@ namespace DOTA2TierList.Persistence
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql("");
+
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

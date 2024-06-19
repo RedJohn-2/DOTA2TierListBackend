@@ -15,7 +15,7 @@ namespace DOTA2TierList.Logic.Store
 
         Task<IReadOnlyList<User>> GetByName(string name);
 
-        Task<User> GetByEmail(string email);
+        Task<User?> GetByEmail(string email);
 
     }
 }

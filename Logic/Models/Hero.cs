@@ -9,7 +9,6 @@ namespace DOTA2TierList.Logic.Models
 {
     public class Hero : TierListItem
     {
-        public long Id { get; set; }
-        public string Name { get; set; } = string.Empty;
+        
     }
 }
