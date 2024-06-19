@@ -17,4 +17,8 @@
     <ProjectReference Include="..\Logic\DOTA2TierList.Logic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Middlewares\" />
+  </ItemGroup>
+
 </Project>

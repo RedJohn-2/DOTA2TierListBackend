@@ -4,6 +4,7 @@ using DOTA2TierList.Logic.Models.TierListModel;
 using DOTA2TierList.API.Contracts;
 using DOTA2TierList.Application.Services;
 using DOTA2TierList.Application.Mappers;
+using System;
 
 namespace DOTA2TierList.API.Controllers
 {
@@ -19,7 +20,7 @@ namespace DOTA2TierList.API.Controllers
             _userMapper = userMapper;
         }
 
-        [HttpGet("{id:long}")]
+        [HttpGet("[action]/{id:long}")]
         public async Task<ActionResult> GetById(long id)
         {
             var user = await _userService.GetById(id);
@@ -27,7 +28,7 @@ namespace DOTA2TierList.API.Controllers
             return Json(response);
         }
 
-        [HttpGet]
+        [HttpGet("[action]")]
         public async Task<ActionResult> GetByEmail(string email)
         {
             var user = await _userService.GetByEmail(email);
@@ -35,14 +36,14 @@ namespace DOTA2TierList.API.Controllers
             return Json(response);
         }
 
-        [HttpPost]
-        public async Task<ActionResult> Create(CreateUserRequest request)
+        [HttpPost("[action]")]
+        public async Task<ActionResult> Create([FromBody]CreateUserRequest request)
         {
             var user = new User
             {
                 Name = request.Name,
                 Email = request.Email,
-                PasswordHash = request.PasswordHash
+                PasswordHash = request.Password
             };
 
             await _userService.Create(user);
