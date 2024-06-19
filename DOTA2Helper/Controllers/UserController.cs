@@ -3,8 +3,8 @@ using DOTA2TierList.Logic.Models;
 using DOTA2TierList.Logic.Models.TierListModel;
 using DOTA2TierList.API.Contracts;
 using DOTA2TierList.Application.Services;
-using DOTA2TierList.Application.Mappers;
 using System;
+using AutoMapper;
 
 namespace DOTA2TierList.API.Controllers
 {
@@ -12,19 +12,19 @@ namespace DOTA2TierList.API.Controllers
     public class UserController : Controller
     {
         public readonly UserService _userService;
-        public readonly UserMapper _userMapper;
+        public readonly IMapper _mapper;
 
-        public UserController(UserService userService, UserMapper userMapper)
+        public UserController(UserService userService, IMapper mapper)
         {
             _userService = userService;
-            _userMapper = userMapper;
+            _mapper = mapper;
         }
 
         [HttpGet("[action]/{id:long}")]
         public async Task<ActionResult> GetById(long id)
         {
             var user = await _userService.GetById(id);
-            var response = _userMapper.ToUserResponse(user);
+            var response = _mapper.Map<UserResponse>(user);
             return Json(response);
         }
 
@@ -32,19 +32,14 @@ namespace DOTA2TierList.API.Controllers
         public async Task<ActionResult> GetByEmail(string email)
         {
             var user = await _userService.GetByEmail(email);
-            var response = _userMapper.ToUserResponse(user);
+            var response = _mapper.Map<UserResponse>(user);
             return Json(response);
         }
 
         [HttpPost("[action]")]
         public async Task<ActionResult> Create([FromBody]CreateUserRequest request)
         {
-            var user = new User
-            {
-                Name = request.Name,
-                Email = request.Email,
-                PasswordHash = request.Password
-            };
+            var user = _mapper.Map<User>(request);
 
             await _userService.Create(user);
 
