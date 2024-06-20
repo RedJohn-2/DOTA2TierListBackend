@@ -5,6 +5,7 @@ using FluentValidation;
 using DOTA2TierList.Application.Validation;
 using DOTA2TierList.Application.Mapping;
 using DOTA2TierList.Infrastructure.Auth;
+using DOTA2TierList.Application.Mapping;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);

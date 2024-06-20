@@ -16,8 +16,8 @@
   <ItemGroup>
     <ProjectReference Include="..\DOTA2TierList.Application\DOTA2TierList.Application.csproj" />
     <ProjectReference Include="..\DOTA2TierList.Infrastructure\DOTA2TierList.Infrastructure.csproj" />
+    <ProjectReference Include="..\DOTA2TierList.Logic\DOTA2TierList.Logic.csproj" />
     <ProjectReference Include="..\DOTA2TierList.Persistence\DOTA2TierList.Persistence.csproj" />
-    <ProjectReference Include="..\Logic\DOTA2TierList.Logic.csproj" />
   </ItemGroup>
 
   <ItemGroup>
