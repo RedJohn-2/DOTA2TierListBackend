@@ -7,6 +7,9 @@ using System;
 using AutoMapper;
 using FluentValidation;
 using DOTA2TierList.Application.Contracts;
+using Microsoft.AspNetCore.Authorization;
+using DOTA2TierList.Infrastructure.Auth;
+using Microsoft.Extensions.Options;
 
 namespace DOTA2TierList.API.Controllers
 {
@@ -21,6 +24,7 @@ namespace DOTA2TierList.API.Controllers
         }
 
         [HttpGet("[action]/{id:long}")]
+        [Authorize]
         public async Task<ActionResult> GetById(long id)
         {
             var user = await _userService.GetById(id);
@@ -44,11 +48,13 @@ namespace DOTA2TierList.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult> Login([FromBody] LoginUserRequest request)
+        public async Task<ActionResult> Login([FromBody] LoginUserRequest request, [FromServices] IOptions<JwtOptions> options)
         {
+
             var token = await _userService.Login(request);
 
-            return Ok(token);
+            Response.Cookies.Append(options.Value.CookieKey, token);
+            return Ok();
         }
     }
 }

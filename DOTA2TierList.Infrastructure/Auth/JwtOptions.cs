@@ -12,5 +12,7 @@ namespace DOTA2TierList.Infrastructure.Auth
 
         public int ExpiresHours { get; set; }
 
+        public string CookieKey {  get; set; } = string.Empty;
+
     }
 }

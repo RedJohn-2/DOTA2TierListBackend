@@ -5,6 +5,7 @@ using FluentValidation;
 using DOTA2TierList.Application.Validation;
 using DOTA2TierList.Application.Mapping;
 using DOTA2TierList.Infrastructure.Auth;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +14,17 @@ var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection));
 
+
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
+builder.Services.AddSingleton<JwtOptions>();
+
+builder.Services.AddAuthenticationServices(builder.Configuration);
 
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 builder.Services.AddValidatorsFromAssemblyContaining<UserRequestValidator>();
+
 builder.Services.AddUserService();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -34,6 +41,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
