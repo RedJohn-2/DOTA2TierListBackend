@@ -18,7 +18,7 @@ namespace DOTA2TierList.Persistence.Repository
             _db = applicationContext;
         }
 
-        public async Task Add(User user)
+        public async Task Register(User user)
         {
             await _db.Users.AddAsync(user);
             await _db.SaveChangesAsync();

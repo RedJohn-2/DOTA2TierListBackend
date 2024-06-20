@@ -41,17 +41,16 @@ namespace DOTA2TierList.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult> Create([FromBody]CreateUserRequest request)
+        public async Task<ActionResult> Create([FromBody]RegisterUserRequest request)
         {
-            var validationResult = _validator.Validate(request);
+            var validationResult = await _validator.ValidateAsync(request);
 
             if (!validationResult.IsValid)
             {
                 return ValidationProblem(validationResult.ToString(", "));
             }
 
-            var user = _mapper.Map<User>(request);
-            await _userService.Create(user);
+            await _userService.Register(request.Name, request.Email, request.Password);
 
             return Ok();
         }

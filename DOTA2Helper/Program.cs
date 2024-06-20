@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection));
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
-builder.Services.AddValidatorsFromAssemblyContaining<IUserRequest>();
+builder.Services.AddValidatorsFromAssemblyContaining<UserRequestValidator>();
 builder.Services.AddUserService();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

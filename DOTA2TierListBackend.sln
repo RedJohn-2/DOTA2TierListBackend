@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DOTA2TierList.API", "DOTA2H
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DOTA2TierList.Logic", "Logic\DOTA2TierList.Logic.csproj", "{7DC2A343-CD02-44C9-92B1-C4B22FAF1123}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOTA2TierList.Application", "DOTA2TierList.Application\DOTA2TierList.Application.csproj", "{D6194333-8386-45B5-96D4-897040505EBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DOTA2TierList.Application", "DOTA2TierList.Application\DOTA2TierList.Application.csproj", "{D6194333-8386-45B5-96D4-897040505EBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOTA2TierList.Persistence", "DOTA2TierList.Persistence\DOTA2TierList.Persistence.csproj", "{5FE1E15F-3972-4640-868D-29F1A526955D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DOTA2TierList.Persistence", "DOTA2TierList.Persistence\DOTA2TierList.Persistence.csproj", "{5FE1E15F-3972-4640-868D-29F1A526955D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOTA2TierList.Infrastructure", "DOTA2TierList.Infrastructure\DOTA2TierList.Infrastructure.csproj", "{B28C9BF1-F3F9-471F-93E8-4AA4CF41B838}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{5FE1E15F-3972-4640-868D-29F1A526955D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FE1E15F-3972-4640-868D-29F1A526955D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FE1E15F-3972-4640-868D-29F1A526955D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B28C9BF1-F3F9-471F-93E8-4AA4CF41B838}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B28C9BF1-F3F9-471F-93E8-4AA4CF41B838}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B28C9BF1-F3F9-471F-93E8-4AA4CF41B838}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B28C9BF1-F3F9-471F-93E8-4AA4CF41B838}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

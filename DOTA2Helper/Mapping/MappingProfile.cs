@@ -8,8 +8,7 @@ namespace DOTA2TierList.API.Mapping
     {
         public MappingProfile() 
         {
-            this.CreateMap<CreateUserRequest, User>()
-                .ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password));
+            this.CreateMap<RegisterUserRequest, User>();
             this.CreateMap<User, UserResponse>();
         }
     }

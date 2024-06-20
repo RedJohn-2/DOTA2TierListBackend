@@ -16,15 +16,15 @@ namespace DOTA2TierList.Application.Validation
         {
             RuleFor(x => x).SetInheritanceValidator(v =>
             {
-                v.Add(new CreateUserRequestValidator());
+                v.Add(new RegisterUserRequestValidator());
             });
 
         }
     }
 
-    public class CreateUserRequestValidator : AbstractValidator<CreateUserRequest>
+    public class RegisterUserRequestValidator : AbstractValidator<RegisterUserRequest>
     {
-        public CreateUserRequestValidator()
+        public RegisterUserRequestValidator()
         {
             RuleFor(request => request.Name).NotEmpty().Length(2, 15);
             RuleFor(request => request.Email).NotEmpty().EmailAddress();
