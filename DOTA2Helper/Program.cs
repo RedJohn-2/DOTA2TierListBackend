@@ -1,19 +1,21 @@
 using DOTA2TierList.API.ServiceExtentions;
-using DOTA2TierList.Application.Services;
-using DOTA2TierList.Logic.Store;
 using DOTA2TierList.Persistence;
-using DOTA2TierList.Persistence.Repository;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation;
 using DOTA2TierList.Application.Validation;
-using DOTA2TierList.API.Contracts.UserContracts;
+using DOTA2TierList.Application.Mapping;
+using DOTA2TierList.Infrastructure.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection));
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
+
+builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 builder.Services.AddValidatorsFromAssemblyContaining<UserRequestValidator>();
 builder.Services.AddUserService();
 builder.Services.AddControllers();

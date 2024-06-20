@@ -9,7 +9,7 @@ namespace DOTA2TierList.Logic.Store
 {
     public interface IUserStore
     {
-        Task Register(User user);
+        Task Create(User user);
 
         Task<User?> GetById(long id);
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DOTA2TierList.Application.Interfaces
+namespace DOTA2TierList.Application.Interfaces.Auth
 {
     public interface IPasswordHasher
     {

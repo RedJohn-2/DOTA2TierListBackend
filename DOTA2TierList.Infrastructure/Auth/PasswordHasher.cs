@@ -1,6 +1,6 @@
-﻿using DOTA2TierList.Application.Interfaces;
+﻿using DOTA2TierList.Application.Interfaces.Auth;
 
-namespace DOTA2TierList.Infrastructure
+namespace DOTA2TierList.Infrastructure.Auth
 {
     public class PasswordHasher : IPasswordHasher
     {
