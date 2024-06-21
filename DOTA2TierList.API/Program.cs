@@ -5,8 +5,8 @@ using FluentValidation;
 using DOTA2TierList.Application.Validation;
 using DOTA2TierList.Application.Mapping;
 using DOTA2TierList.Infrastructure.Auth;
-using DOTA2TierList.Application.Mapping;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using DOTA2TierList.API.ServiceExtention;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +17,6 @@ builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(c
 
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
-builder.Services.AddSingleton<JwtOptions>();
 
 builder.Services.AddAuthenticationServices(builder.Configuration);
 
@@ -39,6 +38,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandling();
 
 app.UseHttpsRedirection();
 

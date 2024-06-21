@@ -12,15 +12,17 @@ namespace DOTA2TierList.API.ServiceExtentions
 {
     public static class ServiceProviderExtention
     {
-        public static void AddUserService(this IServiceCollection services)
+        public static IServiceCollection AddUserService(this IServiceCollection services)
         {
             services.AddScoped<IUserStore, UserRepository>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<UserService>();
+
+            return services;
         }
 
-        public static void AddAuthenticationServices(this IServiceCollection services, 
+        public static IServiceCollection AddAuthenticationServices(this IServiceCollection services, 
             IConfiguration configuration)
         {
             var jwtOpt = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
@@ -34,9 +36,7 @@ namespace DOTA2TierList.API.ServiceExtentions
                         ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                            jwtOpt!.SecretKey
-                            ))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOpt!.SecretKey))
                     };
 
                     opt.Events = new JwtBearerEvents
@@ -51,6 +51,8 @@ namespace DOTA2TierList.API.ServiceExtentions
                 });
 
             services.AddAuthorization();
+
+            return services;
         }
 
     }

@@ -19,7 +19,6 @@ namespace DOTA2TierList.Application.Validation
                 v.Add(new RegisterUserRequestValidator());
                 v.Add(new LoginUserRequestValidator());
             });
-
         }
     }
 
@@ -28,7 +27,7 @@ namespace DOTA2TierList.Application.Validation
         public RegisterUserRequestValidator()
         {
             RuleFor(request => request.Name).NotEmpty().Length(2, 15);
-            RuleFor(request => request.Email).NotEmpty().EmailAddress();
+            RuleFor(request => request.Email).NotEmpty().EmailAddress().WithMessage("Email address incorrect!!!");
             RuleFor(request => request.Password).NotEmpty().MinimumLength(8).Equal(request => request.ConfirmPassword);
         }
     }

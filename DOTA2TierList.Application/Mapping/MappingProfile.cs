@@ -12,8 +12,9 @@ namespace DOTA2TierList.Application.Mapping
                 .AfterMap((_, dest, opt) =>
                 {
                     if (opt.Items.ContainsKey("PasswordHash"))
-                        dest.PasswordHash = opt.Items["PasswordHash"] as string ?? string.Empty;
+                        dest.PasswordHash = (opt.Items["PasswordHash"] as string)!;
                 });
+
             this.CreateMap<User, UserResponse>();
         }
     }

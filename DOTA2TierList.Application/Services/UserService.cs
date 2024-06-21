@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DOTA2TierList.Application.Contracts;
 using DOTA2TierList.Application.Contracts.UserContracts;
+using DOTA2TierList.Application.Exceptions;
 using DOTA2TierList.Application.Interfaces.Auth;
 using DOTA2TierList.Logic.Models;
 using DOTA2TierList.Logic.Store;
@@ -43,7 +44,7 @@ namespace DOTA2TierList.Application.Services
 
             if (existedUser != null)
             {
-                throw new Exception();
+                throw new UserDuplicateException();
             }
 
             var hash = _passwordHasher.Hash(request.Password);
@@ -61,13 +62,13 @@ namespace DOTA2TierList.Application.Services
 
             if (user == null)
             {
-                throw new Exception();
+                throw new AuthenticationException();
             }
 
 
             if (!_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
             {
-                throw new Exception();   
+                throw new AuthenticationException();
             }
 
             var token = _jwtProvider.GenerateToken(user);
@@ -81,7 +82,7 @@ namespace DOTA2TierList.Application.Services
 
             if (user == null)
             {
-                throw new Exception();
+                throw new UserNotFoundException("Not found user by this id");
             }
 
             var response = _mapper.Map<UserResponse>(user);
@@ -95,7 +96,7 @@ namespace DOTA2TierList.Application.Services
 
             if (user == null)
             {
-                throw new Exception();
+               throw new UserNotFoundException("Not found user with this Email address");
             }
 
             var response = _mapper.Map<UserResponse>(user);

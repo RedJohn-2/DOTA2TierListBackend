@@ -54,6 +54,7 @@ namespace DOTA2TierList.API.Controllers
             var token = await _userService.Login(request);
 
             Response.Cookies.Append(options.Value.CookieKey, token);
+
             return Ok();
         }
     }
