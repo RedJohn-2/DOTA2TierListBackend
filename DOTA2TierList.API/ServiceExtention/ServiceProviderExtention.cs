@@ -30,6 +30,7 @@ namespace DOTA2TierList.API.ServiceExtentions
         {
             var jwtOpt = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
 
+            services.AddSingleton<IAuthorizationHandler, UserRolesHandler>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opt =>
                 {
