@@ -21,5 +21,7 @@ namespace DOTA2TierList.Persistence.Entities
 
         public long UserId { get; set; }
         public UserEntity User { get; set; } = new();
+
+        public List<TierEntity> Tiers { get; set; } = [];
     }
 }

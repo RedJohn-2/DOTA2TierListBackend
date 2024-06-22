@@ -18,7 +18,7 @@ namespace DOTA2TierList.Persistence.Entities
 
         public List<RoleEntity> Roles { get; set; } = [];
 
-        public List<TierListEntity> TierList { get; set; } = [];
+        public List<TierListEntity> TierLists { get; set; } = [];
 
     }
 }

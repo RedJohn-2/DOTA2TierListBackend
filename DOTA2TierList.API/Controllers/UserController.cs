@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using DOTA2TierList.Logic.Models;
-using DOTA2TierList.Logic.Models.TierListModel;
 using DOTA2TierList.Application.Services;
 using System;
 using AutoMapper;
