@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DOTA2TierList.Logic.Models.TierListModel;
 
-namespace DOTA2TierList.Logic.Models
+namespace DOTA2TierList.Logic.Models.TierItemTypes
 {
-    public class Hero : TierListItem
+    public class Hero : TierItem
     {
-        
+
     }
 }

@@ -1,5 +1,5 @@
-﻿using DOTA2TierList.Application.Contracts;
-using DOTA2TierList.Application.Contracts.UserContracts;
+﻿using DOTA2TierList.API.Contracts.UserContracts;
+using DOTA2TierList.Application.Contracts;
 using DOTA2TierList.Logic.Models;
 using FluentValidation;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DOTA2TierList.Application.Validation
+namespace DOTA2TierList.API.Validation
 {
     public class UserRequestValidator : AbstractValidator<IUserRequest>
     {

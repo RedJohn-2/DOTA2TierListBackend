@@ -5,16 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DOTA2TierList.Logic.Models;
-using DOTA2TierList.Logic.Models.TierListModel;
+using DOTA2TierList.Persistence.Entities;
+using DOTA2TierList.Logic.Models.TierItemTypes;
 
 namespace DOTA2TierList.Persistence
 {
     public class ApplicationContext : DbContext
     {
-        public DbSet<User> Users { get; set; }
-        public DbSet<TierList> TierLists { get; set; }
-        public DbSet<Tier> Tiers { get; set; }
-        public DbSet<TierListItem> TierListItems { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
+        public DbSet<TierListEntity> TierLists { get; set; }
+        public DbSet<TierEntity> Tiers { get; set; }
+        public DbSet<TierItemEntity> TierListItems { get; set; }
         public DbSet<Hero> Heroes { get; set; }
         public DbSet<Artifact> Artifacts { get; set; }
 
@@ -30,7 +31,7 @@ namespace DOTA2TierList.Persistence
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<TierListItem>().UseTpcMappingStrategy();
+            modelBuilder.Entity<TierItem>().UseTpcMappingStrategy();
         }
 
     }

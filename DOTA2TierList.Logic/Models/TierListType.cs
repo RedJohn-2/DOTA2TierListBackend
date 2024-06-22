@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace DOTA2TierList.Logic.Models
 {
-    public class Role
+    public class TierListType
     {
-        public RoleEnum Type { get; set; }
+        public TierListTypeEnum Type { get; set; }
         public string Name { get; set; } = string.Empty;
     }
 }

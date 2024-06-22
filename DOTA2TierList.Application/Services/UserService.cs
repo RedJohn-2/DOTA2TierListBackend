@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using DOTA2TierList.Application.Contracts;
-using DOTA2TierList.Application.Contracts.UserContracts;
 using DOTA2TierList.Application.Exceptions;
 using DOTA2TierList.Application.Interfaces.Auth;
 using DOTA2TierList.Logic.Models;
@@ -18,55 +16,45 @@ namespace DOTA2TierList.Application.Services
     {
         private readonly IUserStore _userStore;
         private readonly IPasswordHasher _passwordHasher;
-        private readonly IMapper _mapper;
-        private readonly IValidator<IUserRequest> _validator;
         private readonly IJwtProvider _jwtProvider;
 
         public UserService(
             IUserStore userStore, 
             IPasswordHasher passwordHasher,
-            IValidator<IUserRequest> validator,
-            IMapper mapper,
             IJwtProvider jwtProvider)
         {
             _userStore = userStore;
             _passwordHasher = passwordHasher;
-            _validator = validator;
-            _mapper = mapper;
             _jwtProvider = jwtProvider;
         }
 
-        public async Task Register(RegisterUserRequest request)
+        public async Task Register(User user)
         {
-            await _validator.ValidateAndThrowAsync(request);
            
-            var existedUser = await _userStore.GetByEmail(request.Email);
+            var existedUser = await _userStore.GetByEmail(user.Email);
 
             if (existedUser != null)
             {
                 throw new UserDuplicateException();
             }
 
-            var hash = _passwordHasher.Hash(request.Password);
-
-            var user = _mapper.Map<User>(request, opt => opt.Items["PasswordHash"] = hash);
+            user.PasswordHash = _passwordHasher.Hash(user.Password);
 
             await _userStore.Create(user);
         }
 
-        public async Task<string> Login(LoginUserRequest request)
+        public async Task<string> Login(User user)
         {
-            await _validator.ValidateAndThrowAsync(request);
 
-            var user = await _userStore.GetByEmail(request.Email);
+            var existedUser = await _userStore.GetByEmail(user.Email);
 
-            if (user == null)
+            if (existedUser == null)
             {
                 throw new AuthenticationException();
             }
 
 
-            if (!_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
+            if (!_passwordHasher.VerifyPassword(user.Password, existedUser.PasswordHash))
             {
                 throw new AuthenticationException();
             }
@@ -76,7 +64,7 @@ namespace DOTA2TierList.Application.Services
             return token;
         }
 
-        public async Task<UserResponse> GetById(long id)
+        public async Task<User> GetById(long id)
         {
             var user = await _userStore.GetById(id);
 
@@ -85,12 +73,10 @@ namespace DOTA2TierList.Application.Services
                 throw new UserNotFoundException("Not found user by this id");
             }
 
-            var response = _mapper.Map<UserResponse>(user);
-
-            return response;
+            return user;
         }
 
-        public async Task<UserResponse> GetByEmail(string email)
+        public async Task<User> GetByEmail(string email)
         {
             var user = await _userStore.GetByEmail(email);
 
@@ -99,9 +85,7 @@ namespace DOTA2TierList.Application.Services
                throw new UserNotFoundException("Not found user with this Email address");
             }
 
-            var response = _mapper.Map<UserResponse>(user);
-
-            return response;
+            return user;
         }
     }
 }

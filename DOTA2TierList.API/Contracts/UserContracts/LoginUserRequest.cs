@@ -1,5 +1,5 @@
 ﻿
-using DOTA2TierList.Application.Contracts.UserContracts;
+using DOTA2TierList.API.Contracts.UserContracts;
 
 namespace DOTA2TierList.Application.Contracts
 {

@@ -1,5 +1,4 @@
-﻿using DOTA2TierList.Logic.Models.TierListModel;
-using DOTA2TierList.Logic.Models;
+﻿using DOTA2TierList.Logic.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

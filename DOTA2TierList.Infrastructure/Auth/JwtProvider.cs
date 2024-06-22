@@ -24,7 +24,7 @@ namespace DOTA2TierList.Infrastructure.Auth
         public string GenerateToken(User user)
         {
             List<Claim> claims = [new("userId", user.Id.ToString()),];
-            claims.AddRange(user.Roles.Select(r => new Claim("Roles", r.Id.ToString())).ToList());
+            claims.AddRange(user.Roles.Select(r => new Claim("Roles", ((int)r.Type).ToString())).ToList());
 
 
             var signingCredentials = new SigningCredentials(

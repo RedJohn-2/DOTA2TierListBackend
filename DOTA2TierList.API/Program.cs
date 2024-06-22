@@ -2,11 +2,13 @@ using DOTA2TierList.API.ServiceExtentions;
 using DOTA2TierList.Persistence;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation;
-using DOTA2TierList.Application.Validation;
-using DOTA2TierList.Application.Mapping;
 using DOTA2TierList.Infrastructure.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using DOTA2TierList.API.ServiceExtention;
+using DOTA2TierList.API.Validation;
+using DOTA2TierList.API.Mapping;
+using AutoMapper;
+using DOTA2TierList.Persistence.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +22,8 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(J
 
 builder.Services.AddAuthenticationServices(builder.Configuration);
 
-builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+builder.Services.AddAutoMapper(typeof(DtoMappingProfile).Assembly, typeof(DaoMappingProfile).Assembly);
+builder.Services.AddSingleton<IMapper>();
 builder.Services.AddValidatorsFromAssemblyContaining<UserRequestValidator>();
 
 builder.Services.AddUserService();

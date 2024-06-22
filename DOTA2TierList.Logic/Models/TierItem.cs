@@ -1,5 +1,4 @@
-﻿using DOTA2TierList.Logic.Models.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace DOTA2TierList.Logic.Models
 {
-    public class Role
+    public abstract class TierItem
     {
-        public RoleEnum Type { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; } = string.Empty;
+        public List<Tier> Tiers { get; set; } = new();
     }
 }
