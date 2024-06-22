@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Options;
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
+using DOTA2TierList.Logic.Models.Enums;
 
 namespace DOTA2TierList.API.ServiceExtentions
 {
@@ -50,7 +53,18 @@ namespace DOTA2TierList.API.ServiceExtentions
                     };
                 });
 
-            services.AddAuthorization();
+            services.AddAuthorization(opt =>
+            {
+                opt.AddPolicy("Admin", policy =>
+                {
+                    policy.AddRequirements(new UserRolesRequirement((int)RoleEnum.Admin));   
+                });
+
+                opt.AddPolicy("User", policy =>
+                {
+                    policy.AddRequirements(new UserRolesRequirement((int)RoleEnum.User));
+                });
+            });
 
             return services;
         }

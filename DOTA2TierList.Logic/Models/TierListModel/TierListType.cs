@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DOTA2TierList.Logic.Models.TierListModel
 {
-    public enum TierListType
+    public class TierListType
     {
-        HERO_TIER_LIST,
-        ARTIFACT_TIER_LIST
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }

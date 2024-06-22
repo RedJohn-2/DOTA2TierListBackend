@@ -13,12 +13,12 @@ namespace DOTA2TierList.Logic.Models.TierListModel
         public string? Description { get; set; }
 
         public long UserId { get; set; }
+        public User User { get; set; } = new();
 
-        public User User { get; set; } = null!;
+        public int TierListTypeId {  get; set; }
+        public TierListType TierListType { get; set; } = new();
 
-        public TierListType TierListType { get; set; }
-
-        public List<Tier> tiers { get; set; } = new();
+        public List<Tier> Tiers { get; set; } = new();
 
     }
 }

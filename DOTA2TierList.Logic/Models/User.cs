@@ -16,7 +16,9 @@ namespace DOTA2TierList.Logic.Models
 
         public string PasswordHash { get; set; } = string.Empty;
 
-        public List<TierList> tierLists { get; set; } = new();
+        public List<TierList> TierLists { get; set; } = new();
+
+        public List<Role> Roles { get; set; } = new();
 
     }
 }

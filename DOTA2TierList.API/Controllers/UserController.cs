@@ -13,6 +13,7 @@ using Microsoft.Extensions.Options;
 
 namespace DOTA2TierList.API.Controllers
 {
+    [ApiController]
     [Route("[controller]")]
     public class UserController : Controller
     {
@@ -24,7 +25,7 @@ namespace DOTA2TierList.API.Controllers
         }
 
         [HttpGet("[action]/{id:long}")]
-        [Authorize]
+        [Authorize("Admin")]
         public async Task<ActionResult> GetById(long id)
         {
             var user = await _userService.GetById(id);
@@ -39,7 +40,7 @@ namespace DOTA2TierList.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult> Register([FromBody]RegisterUserRequest request)
+        public async Task<ActionResult> Register(RegisterUserRequest request)
         {
 
             await _userService.Register(request);
@@ -48,7 +49,7 @@ namespace DOTA2TierList.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult> Login([FromBody] LoginUserRequest request, [FromServices] IOptions<JwtOptions> options)
+        public async Task<ActionResult> Login(LoginUserRequest request, [FromServices] IOptions<JwtOptions> options)
         {
 
             var token = await _userService.Login(request);

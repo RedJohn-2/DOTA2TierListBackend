@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace DOTA2TierList.Infrastructure.Auth
@@ -22,7 +23,9 @@ namespace DOTA2TierList.Infrastructure.Auth
 
         public string GenerateToken(User user)
         {
-            Claim[] claims = [new("userId", user.Id.ToString())];
+            List<Claim> claims = [new("userId", user.Id.ToString()),];
+            claims.AddRange(user.Roles.Select(r => new Claim("Roles", r.Id.ToString())).ToList());
+
 
             var signingCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
