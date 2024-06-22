@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DOTA2TierList.Application.Services
+namespace DOTA2TierList.Logic.Models.TierItemTypes
 {
-    public class TierListItemService
+    public class Artifact : TierItem
     {
 
     }
