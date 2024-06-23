@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace DOTA2TierList.API.Contracts.UserContracts
+namespace DOTA2TierList.API.Contracts
 {
     public record ErrorResponse(int StatusCode, string Message)
     {

@@ -7,6 +7,7 @@ using AutoMapper;
 using DOTA2TierList.Application.Exceptions;
 using DOTA2TierList.Application.Interfaces.Auth;
 using DOTA2TierList.Logic.Models;
+using DOTA2TierList.Logic.Models.Enums;
 using DOTA2TierList.Logic.Store;
 using FluentValidation;
 
@@ -37,8 +38,10 @@ namespace DOTA2TierList.Application.Services
             {
                 throw new UserDuplicateException();
             }
-
+            
             user.PasswordHash = _passwordHasher.Hash(user.Password);
+
+            AddRole(user, RoleEnum.User);
 
             await _userStore.Create(user);
         }
@@ -86,6 +89,15 @@ namespace DOTA2TierList.Application.Services
             }
 
             return user;
+        }
+
+        private void AddRole(User user, RoleEnum role)
+        {
+            user.Roles.Add(new Role
+            {
+                Type = role,
+                Name = Enum.GetName(typeof(RoleEnum), role)!
+            });
         }
     }
 }

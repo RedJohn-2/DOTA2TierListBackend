@@ -1,4 +1,4 @@
-﻿using DOTA2TierList.API.Contracts.UserContracts;
+﻿using DOTA2TierList.API.Contracts;
 using DOTA2TierList.Application.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;

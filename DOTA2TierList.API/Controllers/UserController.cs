@@ -80,5 +80,17 @@ namespace DOTA2TierList.API.Controllers
 
             return Ok();
         }
+
+        [HttpPut("[action]/{id:long}")]
+        public async Task<ActionResult> Update(UpdateUserRequest request, long id)
+        {
+            await _validator.ValidateAndThrowAsync(request);
+
+            var user = _mapper.Map<User>(request);
+
+            await _userService.Update(user);
+
+            return Ok();
+        }
     }
 }

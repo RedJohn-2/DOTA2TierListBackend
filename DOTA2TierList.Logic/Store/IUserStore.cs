@@ -17,5 +17,7 @@ namespace DOTA2TierList.Logic.Store
 
         Task<User?> GetByEmail(string email);
 
+        Task<User?> UpdateUser(User user);
+
     }
 }

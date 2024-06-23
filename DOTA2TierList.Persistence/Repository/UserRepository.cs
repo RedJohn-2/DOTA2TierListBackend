@@ -25,6 +25,7 @@ namespace DOTA2TierList.Persistence.Repository
         public async Task Create(User user)
         {
             var userEntity = _mapper.Map<UserEntity>(user);
+
             await _db.Users.AddAsync(userEntity);
             await _db.SaveChangesAsync();
         }
@@ -49,6 +50,11 @@ namespace DOTA2TierList.Persistence.Repository
             var userEntities = await _db.Users.Where(x => x.Name == name).ToListAsync();
             var users = _mapper.Map<List<User>>(userEntities);
             return users;
+        }
+
+        public Task<User?> UpdateUser(User user)
+        {
+            throw new NotImplementedException();
         }
     }
 }

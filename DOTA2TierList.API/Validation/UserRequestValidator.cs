@@ -40,4 +40,13 @@ namespace DOTA2TierList.API.Validation
             RuleFor(request => request.Password).NotEmpty().MinimumLength(8);
         }
     }
+
+    public class UpdateUserRequestValidator : AbstractValidator<UpdateUserRequest>
+    {
+        public UpdateUserRequestValidator()
+        {
+            RuleFor(request => request.Name).Length(2, 15);
+            RuleFor(request => request.Email).EmailAddress();
+        }
+    }
 }
