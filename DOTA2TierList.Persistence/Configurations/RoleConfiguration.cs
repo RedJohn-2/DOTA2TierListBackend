@@ -1,4 +1,5 @@
-﻿using DOTA2TierList.Persistence.Entities;
+﻿using DOTA2TierList.Logic.Models.Enums;
+using DOTA2TierList.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -18,6 +19,15 @@ namespace DOTA2TierList.Persistence.Configurations
             builder.
                 HasMany(r => r.Users)
                 .WithMany(u => u.Roles);
+
+            builder.Property(r => r.Name).HasMaxLength(80);
+
+            builder.HasData(
+                    new RoleEntity { Id = 1, Name = Enum.GetName(typeof(RoleEnum), (RoleEnum)1)! },
+                    new RoleEntity { Id = 2, Name = Enum.GetName(typeof(RoleEnum), (RoleEnum)2)! },
+                    new RoleEntity { Id = 3, Name = Enum.GetName(typeof(RoleEnum), (RoleEnum)3)! },
+                    new RoleEntity { Id = 4, Name = Enum.GetName(typeof(RoleEnum), (RoleEnum)4)! }
+                );
         }
     }
 }

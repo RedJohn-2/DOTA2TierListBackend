@@ -28,6 +28,9 @@ namespace DOTA2TierList.Persistence.Configurations
                 HasOne(tierList => tierList.Type)
                 .WithMany(tierType => tierType.TierLists)
                 .HasForeignKey(tierType => tierType.TypeId);
+
+            builder.Property(tierList => tierList.Name).HasMaxLength(80);
+            builder.Property(tierList => tierList.TypeId).HasDefaultValue(1);
         }
     }
 }

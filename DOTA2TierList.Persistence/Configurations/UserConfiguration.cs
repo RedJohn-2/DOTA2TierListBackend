@@ -25,7 +25,9 @@ namespace DOTA2TierList.Persistence.Configurations
                 .WithOne(tierList => tierList.User)
                 .HasForeignKey(tierList => tierList.UserId);
 
-
+            builder.Property(u => u.Name).HasMaxLength(80);
+            builder.Property(u => u.Email).HasMaxLength(100);
+            builder.Property(u => u.PasswordHash).HasMaxLength(100);
         }
     }
 }

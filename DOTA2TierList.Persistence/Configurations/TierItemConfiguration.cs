@@ -18,6 +18,8 @@ namespace DOTA2TierList.Persistence.Configurations
             builder.
                 HasMany(i => i.Tiers)
                 .WithMany(t => t.Items);
+
+            builder.Property(i => i.Name).HasMaxLength(80);
         }
     }
 }
