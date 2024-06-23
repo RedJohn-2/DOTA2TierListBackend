@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using DOTA2TierList.Logic.Models;
 using DOTA2TierList.Logic.Models.Enums;
+using DOTA2TierList.Logic.Models.TierItemTypes;
 using DOTA2TierList.Persistence.Entities;
+using DOTA2TierList.Persistence.Entities.TierItemTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +28,10 @@ namespace DOTA2TierList.Persistence.Mapping
 
             CreateMap<TierEntity, Tier>();
 
+            CreateMap<TierItemEntity, TierItem>()
+                .Include<HeroEntity, Hero>()
+                .Include<ArtifactEntity, Artifact>();
+
 
             CreateMap<Role, RoleEntity>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => (int)src.Type));
@@ -37,6 +43,10 @@ namespace DOTA2TierList.Persistence.Mapping
             CreateMap<TierList, TierListEntity>();
 
             CreateMap<Tier, TierEntity>();
+
+            CreateMap<TierItem, TierItemEntity>()
+                .Include<Hero, HeroEntity>()
+                .Include<Artifact, ArtifactEntity>();
 
         }
 

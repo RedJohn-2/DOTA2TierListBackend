@@ -21,4 +21,8 @@
     <ProjectReference Include="..\DOTA2TierList.Logic\DOTA2TierList.Logic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

@@ -12,6 +12,8 @@ using DOTA2TierList.Persistence.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.AddAutoMapper(typeof(DtoMappingProfile).Assembly, typeof(DaoMappingProfile).Assembly);
 // Add services to the container.
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -23,7 +25,7 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(J
 builder.Services.AddAuthenticationServices(builder.Configuration);
 
 builder.Services.AddAutoMapper(typeof(DtoMappingProfile).Assembly, typeof(DaoMappingProfile).Assembly);
-builder.Services.AddSingleton<IMapper>();
+
 builder.Services.AddValidatorsFromAssemblyContaining<UserRequestValidator>();
 
 builder.Services.AddUserService();
