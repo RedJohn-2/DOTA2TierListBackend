@@ -47,7 +47,7 @@ namespace DOTA2TierList.API.ServiceExtentions
                     {
                         OnMessageReceived = context =>
                         {
-                            context.Token = context.Request.Cookies[jwtOpt.CookieKey];
+                            context.Token = context.Request.Cookies[jwtOpt.CookieAccessKey];
 
                             return Task.CompletedTask;
                         }

@@ -10,9 +10,12 @@ namespace DOTA2TierList.Infrastructure.Auth
     {
         public string SecretKey { get; set; } = string.Empty;
 
-        public int ExpiresHours { get; set; }
+        public int ExpiresAccessTokenSeconds { get; set; }
 
-        public string CookieKey {  get; set; } = string.Empty;
+        public int ExpiresRefreshTokenSeconds { get; set; }
 
+        public string CookieAccessKey {  get; set; } = string.Empty;
+
+        public string CookieRefreshKey { get; set; } = string.Empty;
     }
 }

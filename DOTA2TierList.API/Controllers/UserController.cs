@@ -74,9 +74,31 @@ namespace DOTA2TierList.API.Controllers
 
             var user = _mapper.Map<User>(request);
 
-            var token = await _userService.Login(user);
+            (var accessToken, var refreshToken) = await _userService.Login(user);
 
-            Response.Cookies.Append(options.Value.CookieKey, token);
+            Response.Cookies.Append(options.Value.CookieAccessKey, accessToken);
+
+            Response.Cookies.Append(options.Value.CookieRefreshKey, refreshToken);
+
+            return Ok();
+        }
+
+        [HttpPost("[action]")]
+        public async Task<ActionResult> Refresh([FromServices] IOptions<JwtOptions> options)
+        {
+
+            var accessToken = Request.Cookies[options.Value.CookieAccessKey];
+
+            var refreshToken = Request.Cookies[options.Value.CookieRefreshKey];
+
+            if (accessToken is null || refreshToken is null)                        
+                return Unauthorized();
+
+            (var newAccessToken, var newRefreshToken) = await _userService.Refresh(accessToken, refreshToken);
+
+            Response.Cookies.Append(options.Value.CookieAccessKey, newAccessToken);
+
+            Response.Cookies.Append(options.Value.CookieRefreshKey, newRefreshToken);
 
             return Ok();
         }
@@ -92,5 +114,7 @@ namespace DOTA2TierList.API.Controllers
 
             return Ok();
         }
+
+
     }
 }

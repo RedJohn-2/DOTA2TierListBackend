@@ -10,6 +10,7 @@ using DOTA2TierList.Logic.Models;
 using DOTA2TierList.Logic.Models.Enums;
 using DOTA2TierList.Logic.Store;
 using FluentValidation;
+using Microsoft.Extensions.Options;
 
 namespace DOTA2TierList.Application.Services
 {
@@ -41,12 +42,10 @@ namespace DOTA2TierList.Application.Services
             
             user.PasswordHash = _passwordHasher.Hash(user.Password);
 
-            AddRole(user, RoleEnum.User);
-
             await _userStore.Create(user);
         }
 
-        public async Task<string> Login(User user)
+        public async Task<(string, string)> Login(User user)
         {
 
             var existedUser = await _userStore.GetByEmail(user.Email);
@@ -62,9 +61,41 @@ namespace DOTA2TierList.Application.Services
                 throw new AuthenticationException();
             }
 
-            var token = _jwtProvider.GenerateToken(user);
+            var accessToken = _jwtProvider.GenerateAccessToken(existedUser);
 
-            return token;
+            var refreshToken = _jwtProvider.GenerateRefreshToken(existedUser);
+
+            await _userStore.UpdateUser(existedUser);
+
+            return (accessToken, refreshToken);
+        }
+
+        public async Task<(string, string)> Refresh(string? accessToken, string? refreshToken)
+        {
+
+            var userId = await _jwtProvider.GetUserIdFromExpiredToken(accessToken);
+
+            if (userId is null)
+            {  
+                throw new AuthenticationException(); 
+            }
+
+            var id = long.Parse(userId);
+
+            var user = await _userStore.GetById(id);
+
+            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpires < DateTime.UtcNow)
+            {
+                throw new AuthenticationException();
+            }
+
+            var newAccessToken = _jwtProvider.GenerateAccessToken(user);
+
+            var newRefreshToken = _jwtProvider.GenerateRefreshToken(user);
+
+            await _userStore.UpdateUser(user);
+
+            return (newAccessToken, newRefreshToken);
         }
 
         public async Task<User> GetById(long id)
@@ -91,13 +122,5 @@ namespace DOTA2TierList.Application.Services
             return user;
         }
 
-        private void AddRole(User user, RoleEnum role)
-        {
-            user.Roles.Add(new Role
-            {
-                Type = role,
-                Name = Enum.GetName(typeof(RoleEnum), role)!
-            });
-        }
     }
 }

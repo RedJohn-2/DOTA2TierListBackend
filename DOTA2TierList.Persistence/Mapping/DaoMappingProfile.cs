@@ -28,6 +28,9 @@ namespace DOTA2TierList.Persistence.Mapping
 
             CreateMap<TierEntity, Tier>();
 
+            CreateMap<HeroEntity, Hero>();
+            CreateMap<ArtifactEntity, Artifact>();
+
             CreateMap<TierItemEntity, TierItem>()
                 .Include<HeroEntity, Hero>()
                 .Include<ArtifactEntity, Artifact>();
@@ -43,6 +46,9 @@ namespace DOTA2TierList.Persistence.Mapping
             CreateMap<TierList, TierListEntity>();
 
             CreateMap<Tier, TierEntity>();
+
+            CreateMap<Hero, HeroEntity>();
+            CreateMap<Artifact, ArtifactEntity>();
 
             CreateMap<TierItem, TierItemEntity>()
                 .Include<Hero, HeroEntity>()

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using DOTA2TierList.Logic.Models;
+using DOTA2TierList.Logic.Models.Enums;
 using DOTA2TierList.Logic.Store;
 using DOTA2TierList.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -26,20 +27,25 @@ namespace DOTA2TierList.Persistence.Repository
         {
             var userEntity = _mapper.Map<UserEntity>(user);
 
+            var role = await _db.Roles.FirstOrDefaultAsync(r => r.Id == (int)RoleEnum.User);
+
+            userEntity.Roles.Add(role!);
+
             await _db.Users.AddAsync(userEntity);
+
             await _db.SaveChangesAsync();
         }
 
         public async Task<User?> GetByEmail(string email)
         {
-            UserEntity? userEntity = await _db.Users.FirstOrDefaultAsync(x => x.Email == email);
+            UserEntity? userEntity = await _db.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == email);
             var user = _mapper.Map<User>(userEntity);
             return user;
         }
 
         public async Task<User?> GetById(long id)
         {
-            UserEntity? userEntity = await _db.Users.FirstOrDefaultAsync(x => x.Id == id);
+            UserEntity? userEntity = await _db.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
             var user = _mapper.Map<User>(userEntity);
             return user;
 
@@ -52,9 +58,21 @@ namespace DOTA2TierList.Persistence.Repository
             return users;
         }
 
-        public Task<User?> UpdateUser(User user)
+        public async Task<User?> UpdateUser(User user)
         {
-            throw new NotImplementedException();
+           var userEntity = await _db.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
+
+           if (userEntity is null)
+           {
+                return null;
+           }
+
+            _mapper.Map(user, userEntity);
+
+            await _db.SaveChangesAsync();
+
+            return _mapper.Map<User>(userEntity);
+
         }
     }
 }
