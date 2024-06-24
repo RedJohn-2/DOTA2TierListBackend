@@ -15,6 +15,8 @@ namespace DOTA2TierList.Logic.Models
         public long UserId { get; set; }
         public User User { get; set; } = new();
 
+        public DateTime ModifiedDate { get; set; }
+
         public TierListType Type { get; set; } = new();
 
         public List<Tier> Tiers { get; set; } = new();

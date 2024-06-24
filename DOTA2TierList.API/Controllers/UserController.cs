@@ -88,7 +88,7 @@ namespace DOTA2TierList.API.Controllers
 
             var user = _mapper.Map<User>(request);
 
-            await _userService.Update(user);
+            //await _userService.Update(user);
 
             return Ok();
         }

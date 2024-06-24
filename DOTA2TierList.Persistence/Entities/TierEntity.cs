@@ -16,6 +16,7 @@ namespace DOTA2TierList.Persistence.Entities
 
         public long TierListId { get; set; }
 
+
         public TierListEntity TierList { get; set; } = new();
 
         public List<TierItemEntity> Items { get; set; } = [];

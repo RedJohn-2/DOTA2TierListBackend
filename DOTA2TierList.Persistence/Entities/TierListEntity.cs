@@ -19,6 +19,8 @@ namespace DOTA2TierList.Persistence.Entities
 
         public TierListTypeEntity Type { get; set; } = new();
 
+        public DateTime ModifiedDate { get; set; }
+
         public long UserId { get; set; }
         public UserEntity User { get; set; } = new();
 

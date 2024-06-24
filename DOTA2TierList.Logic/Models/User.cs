@@ -18,6 +18,10 @@ namespace DOTA2TierList.Logic.Models
 
         public string PasswordHash { get; set; } = string.Empty;
 
+        public string? RefreshToken {  get; set; }
+
+        public DateTime? RefreshTokenExpires {  get; set; }
+
         public List<TierList> TierLists { get; set; } = new();
 
         public List<Role> Roles { get; set; } = new();

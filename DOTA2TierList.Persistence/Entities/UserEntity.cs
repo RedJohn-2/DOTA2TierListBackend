@@ -16,6 +16,10 @@ namespace DOTA2TierList.Persistence.Entities
 
         public string PasswordHash { get; set; } = string.Empty;
 
+        public string? RefreshToken { get; set; }
+
+        public DateTime? RefreshTokenExpire { get; set; }
+
         public List<RoleEntity> Roles { get; set; } = [];
 
         public List<TierListEntity> TierLists { get; set; } = [];
