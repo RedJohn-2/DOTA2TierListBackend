@@ -115,11 +115,12 @@ namespace DOTA2TierList.API.Controllers
             return Ok();
         }
 
-        [HttpPut("[action]/{id:long}")]
+        [HttpPut("[action]")]
         [Authorize]
-        public async Task<ActionResult> Update(UpdateUserRequest request, long id)
+        public async Task<ActionResult> Update(UpdateUserRequest request)
         {
             await _validator.ValidateAndThrowAsync(request);
+            var id = long.Parse(User.Claims.FirstOrDefault(i => i.Type == "userId")!.Value);
 
             await _userService.Update(id, request.Name, request.Email);
 
