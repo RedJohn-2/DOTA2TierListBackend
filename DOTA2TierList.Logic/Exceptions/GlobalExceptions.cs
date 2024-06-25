@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DOTA2TierList.Application.Exceptions
+namespace DOTA2TierList.Logic.Exceptions
 {
     public abstract class NotFoundException : Exception
     {

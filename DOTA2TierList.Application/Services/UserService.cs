@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using DOTA2TierList.Application.Exceptions;
+using DOTA2TierList.Logic.Exceptions;
 using DOTA2TierList.Application.Interfaces.Auth;
 using DOTA2TierList.Logic.Models;
 using DOTA2TierList.Logic.Models.Enums;
@@ -65,24 +65,18 @@ namespace DOTA2TierList.Application.Services
 
             var refreshToken = _jwtProvider.GenerateRefreshToken(existedUser);
 
-            await _userStore.UpdateUser(existedUser);
+            await _userStore.UpdateRefreshToken(existedUser.Id, existedUser.RefreshToken, existedUser.RefreshTokenExpires);
 
             return (accessToken, refreshToken);
         }
 
-        public async Task<(string, string)> Refresh(string? accessToken, string? refreshToken)
+
+        public async Task<(string, string)> Refresh(string accessToken, string refreshToken)
         {
 
             var userId = await _jwtProvider.GetUserIdFromExpiredToken(accessToken);
 
-            if (userId is null)
-            {  
-                throw new AuthenticationException(); 
-            }
-
-            var id = long.Parse(userId);
-
-            var user = await _userStore.GetById(id);
+            var user = await _userStore.GetById(userId);
 
             if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpires < DateTime.UtcNow)
             {
@@ -93,7 +87,7 @@ namespace DOTA2TierList.Application.Services
 
             var newRefreshToken = _jwtProvider.GenerateRefreshToken(user);
 
-            await _userStore.UpdateUser(user);
+            await _userStore.UpdateRefreshToken(user.Id, user.RefreshToken, user.RefreshTokenExpires);
 
             return (newAccessToken, newRefreshToken);
         }
@@ -120,6 +114,13 @@ namespace DOTA2TierList.Application.Services
             }
 
             return user;
+        }
+
+        public async Task Update(long userId, string? name, string? email)
+        {
+
+            await _userStore.UpdateData(userId: userId, name: name, email: email);
+    
         }
 
     }

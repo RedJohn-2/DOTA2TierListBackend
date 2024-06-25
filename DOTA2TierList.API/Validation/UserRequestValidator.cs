@@ -18,6 +18,7 @@ namespace DOTA2TierList.API.Validation
             {
                 v.Add(new RegisterUserRequestValidator());
                 v.Add(new LoginUserRequestValidator());
+                v.Add(new UpdateUserRequestValidator());
             });
         }
     }

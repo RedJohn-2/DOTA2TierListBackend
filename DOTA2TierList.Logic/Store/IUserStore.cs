@@ -1,4 +1,5 @@
 ﻿using DOTA2TierList.Logic.Models;
+using DOTA2TierList.Logic.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,22 @@ namespace DOTA2TierList.Logic.Store
 
         Task<User?> GetById(long id);
 
-        Task<IReadOnlyList<User>> GetByName(string name);
+        Task<IReadOnlyList<User>> GetAll();
+
+        Task<IReadOnlyList<User>> GetByPage(int page, int pageSize);
+
+        Task<IReadOnlyList<User>> GetByPageFilter(int page, int pageSize, UserFilter filter);
 
         Task<User?> GetByEmail(string email);
 
-        Task<User?> UpdateUser(User user);
+        Task UpdateData(long userId, string? name = null, string? email = null, string? passwordHash = null);
 
+        Task UpdateRefreshToken(long userId, string? token, DateTime? tokenExpires);
+
+        Task AddRole(long userId, RoleEnum role);
+
+        Task DeleteRole(long userId, RoleEnum role);
+
+        Task<IReadOnlyList<Role>> GetRoles(long userId);
     }
 }

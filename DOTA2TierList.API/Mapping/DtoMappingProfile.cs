@@ -12,7 +12,6 @@ namespace DOTA2TierList.API.Mapping
         {
             CreateMap<RegisterUserRequest, User>();
             CreateMap<LoginUserRequest, User>();
-            CreateMap<UpdateUserRequest, User>();   
 
             CreateMap<User, UserResponse>();
 

@@ -3,7 +3,7 @@
 namespace DOTA2TierList.API.Contracts.UserContracts
 {
     public record UpdateUserRequest(
-        string Name,
-        string Email
+        string? Name,
+        string? Email
         ) : IUserRequest;
 }

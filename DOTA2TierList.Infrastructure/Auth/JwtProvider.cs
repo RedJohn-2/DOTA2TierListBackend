@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Authentication;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -61,7 +62,7 @@ namespace DOTA2TierList.Infrastructure.Auth
             return Convert.ToBase64String(randomNumber);
         }
 
-        public async Task<string?> GetUserIdFromExpiredToken(string? token)
+        public async Task<long> GetUserIdFromExpiredToken(string? token)
         {
             
             var validation = new TokenValidationParameters
@@ -75,7 +76,7 @@ namespace DOTA2TierList.Infrastructure.Auth
             
             var validationResult = await new JwtSecurityTokenHandler().ValidateTokenAsync(token, validation);
 
-            return validationResult.Claims["userId"].ToString();
+            return long.Parse(validationResult.Claims["userId"].ToString() ?? throw new AuthenticationException());
         }
 
     }

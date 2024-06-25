@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using DOTA2TierList.Logic.Exceptions;
 using DOTA2TierList.Logic.Models;
 using DOTA2TierList.Logic.Models.Enums;
 using DOTA2TierList.Logic.Store;
@@ -23,6 +24,19 @@ namespace DOTA2TierList.Persistence.Repository
             _mapper = mapper;
         }
 
+        public async Task AddRole(long userId, RoleEnum role)
+        {
+            var userEntity = await _db.Users.Include(u => u.Roles)
+                .FirstOrDefaultAsync(u => u.Id == userId) ?? throw new UserNotFoundException();
+
+            var roleEntity = await _db.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.Id == (int)role)
+                ?? throw new Exception();
+
+            userEntity.Roles.Add(roleEntity);
+
+            await _db.SaveChangesAsync();
+        }
+
         public async Task Create(User user)
         {
             var userEntity = _mapper.Map<UserEntity>(user);
@@ -34,6 +48,28 @@ namespace DOTA2TierList.Persistence.Repository
             await _db.Users.AddAsync(userEntity);
 
             await _db.SaveChangesAsync();
+        }
+
+        public async Task DeleteRole(long userId, RoleEnum role)
+        {
+            var userEntity = await _db.Users.Include(u => u.Roles)
+                .FirstOrDefaultAsync(u => u.Id == userId) ?? throw new UserNotFoundException();
+
+            var roleEntity = await _db.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.Id == (int)role)
+                ?? throw new Exception();
+
+            userEntity.Roles.Remove(roleEntity);
+
+            await _db.SaveChangesAsync();
+        }
+
+        public async Task<IReadOnlyList<User>> GetAll()
+        {
+            var usersEntity = await _db.Users.AsNoTracking().ToListAsync();
+
+            var users = _mapper.Map<IReadOnlyList<User>>(usersEntity);
+
+            return users;
         }
 
         public async Task<User?> GetByEmail(string email)
@@ -58,21 +94,72 @@ namespace DOTA2TierList.Persistence.Repository
             return users;
         }
 
-        public async Task<User?> UpdateUser(User user)
+        public async Task<IReadOnlyList<User>> GetByPage(int page, int pageSize)
         {
-           var userEntity = await _db.Users.FirstOrDefaultAsync(x => x.Id == user.Id);
+            var usersEntity = await _db.Users.AsNoTracking()
+                .Skip(pageSize * (page - 1))
+                .Take(pageSize)
+                .ToListAsync();
 
-           if (userEntity is null)
-           {
-                return null;
-           }
+            var users = _mapper.Map<IReadOnlyList<User>>(usersEntity);
 
-            _mapper.Map(user, userEntity);
+            return users;
+        }
 
-            await _db.SaveChangesAsync();
+        public async Task<IReadOnlyList<User>> GetByPageFilter(int page, int pageSize, UserFilter filter)
+        {
+            var usersQuery = _db.Users.AsNoTracking();
 
-            return _mapper.Map<User>(userEntity);
+            if (!string.IsNullOrEmpty(filter.Name))
+            {
+                usersQuery = usersQuery.Where(u => u.Name == filter.Name);
+            }
 
+            if (!string.IsNullOrEmpty(filter.Email))
+            {
+                usersQuery = usersQuery.Where(u => u.Email == filter.Email);
+            }
+
+
+            var usersEntity = await usersQuery
+                .Skip(pageSize * (page - 1))
+                .Take(pageSize)
+                .ToListAsync();
+
+            var users = _mapper.Map<IReadOnlyList<User>>(usersEntity);
+
+            return users;
+        }
+
+        public async Task<IReadOnlyList<Role>> GetRoles(long userId)
+        {
+            var usersEntity = await _db.Users.AsNoTracking().Include(u => u.Roles)
+                .FirstOrDefaultAsync(u => u.Id == userId)
+                ?? throw new UserNotFoundException();
+
+
+            var roles = _mapper.Map<IReadOnlyList<Role>>(usersEntity.Roles);
+
+            return roles;
+        }
+
+        public async Task UpdateData(long userId, string? name = null, string? email = null, string? passwordHash = null)
+        {
+            await _db.Users.Where(u => u.Id == userId)
+                .ExecuteUpdateAsync(u => u
+                .SetProperty(u => u.Name, u => name ?? u.Name)
+                .SetProperty(u => u.Email, u => email ?? u.Email)
+                .SetProperty(u => u.PasswordHash, u => passwordHash ?? u.PasswordHash)
+                );
+        }
+
+        public async Task UpdateRefreshToken(long userId, string? token, DateTime? tokenExpires)
+        {
+            await _db.Users.Where(u => u.Id == userId)
+                .ExecuteUpdateAsync(u => u
+                .SetProperty(u => u.RefreshToken, token)
+                .SetProperty(u => u.RefreshTokenExpires, tokenExpires)
+                );
         }
     }
 }

@@ -14,7 +14,7 @@ namespace DOTA2TierList.Application.Interfaces.Auth
 
         string GenerateRefreshToken(User user);
 
-        Task<string?> GetUserIdFromExpiredToken(string? token);
+        Task<long> GetUserIdFromExpiredToken(string? token);
         
 
     }

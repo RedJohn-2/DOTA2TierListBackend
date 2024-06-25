@@ -84,6 +84,18 @@ namespace DOTA2TierList.API.Controllers
         }
 
         [HttpPost("[action]")]
+        [Authorize]
+        public ActionResult Logout([FromServices] IOptions<JwtOptions> options)
+        {
+
+            Response.Cookies.Delete(options.Value.CookieAccessKey);
+
+            Response.Cookies.Delete(options.Value.CookieRefreshKey);
+
+            return Ok();
+        }
+
+        [HttpPost("[action]")]
         public async Task<ActionResult> Refresh([FromServices] IOptions<JwtOptions> options)
         {
 
@@ -94,7 +106,7 @@ namespace DOTA2TierList.API.Controllers
             if (accessToken is null || refreshToken is null)                        
                 return Unauthorized();
 
-            (var newAccessToken, var newRefreshToken) = await _userService.Refresh(accessToken, refreshToken);
+            (var newAccessToken, var newRefreshToken) = await _userService.Refresh(accessToken!, refreshToken!);
 
             Response.Cookies.Append(options.Value.CookieAccessKey, newAccessToken);
 
@@ -104,13 +116,12 @@ namespace DOTA2TierList.API.Controllers
         }
 
         [HttpPut("[action]/{id:long}")]
+        [Authorize]
         public async Task<ActionResult> Update(UpdateUserRequest request, long id)
         {
             await _validator.ValidateAndThrowAsync(request);
 
-            var user = _mapper.Map<User>(request);
-
-            //await _userService.Update(user);
+            await _userService.Update(id, request.Name, request.Email);
 
             return Ok();
         }
