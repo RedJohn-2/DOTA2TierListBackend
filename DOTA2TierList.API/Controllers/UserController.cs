@@ -35,7 +35,6 @@ namespace DOTA2TierList.API.Controllers
         }
 
         [HttpGet("[action]/{id:long}")]
-        [Authorize("Admin")]
         public async Task<ActionResult> GetById(long id)
         {
             var user = await _userService.GetById(id);
@@ -76,15 +75,25 @@ namespace DOTA2TierList.API.Controllers
 
             (var accessToken, var refreshToken) = await _userService.Login(user);
 
-            Response.Cookies.Append(options.Value.CookieAccessKey, accessToken);
+            Response.Cookies.Append(options.Value.CookieAccessKey, accessToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTime.UtcNow.AddDays(7)
+                });
 
-            Response.Cookies.Append(options.Value.CookieRefreshKey, refreshToken);
+            Response.Cookies.Append(options.Value.CookieRefreshKey, refreshToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTime.UtcNow.AddDays(7)
+                });
 
             return Ok();
         }
 
         [HttpPost("[action]")]
-        [Authorize]
+        [Authorize(Policy = "User")]
         public ActionResult Logout([FromServices] IOptions<JwtOptions> options)
         {
 
@@ -108,9 +117,19 @@ namespace DOTA2TierList.API.Controllers
 
             (var newAccessToken, var newRefreshToken) = await _userService.Refresh(accessToken!, refreshToken!);
 
-            Response.Cookies.Append(options.Value.CookieAccessKey, newAccessToken);
+            Response.Cookies.Append(options.Value.CookieAccessKey, newAccessToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTime.UtcNow.AddDays(7)
+                });
 
-            Response.Cookies.Append(options.Value.CookieRefreshKey, newRefreshToken);
+            Response.Cookies.Append(options.Value.CookieRefreshKey, newRefreshToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTime.UtcNow.AddDays(7)
+                });
 
             return Ok();
         }
@@ -120,9 +139,9 @@ namespace DOTA2TierList.API.Controllers
         public async Task<ActionResult> Update(UpdateUserRequest request)
         {
             await _validator.ValidateAndThrowAsync(request);
-            var id = long.Parse(User.Claims.FirstOrDefault(i => i.Type == "userId")!.Value);
+            var userId = long.Parse(User.Claims.FirstOrDefault(i => i.Type == "userId")!.Value);
 
-            await _userService.Update(id, request.Name, request.Email);
+            await _userService.Update(userId, request.Name, request.Email);
 
             return Ok();
         }

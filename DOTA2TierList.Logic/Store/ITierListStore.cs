@@ -11,10 +11,15 @@ namespace DOTA2TierList.Logic.Store
     {
         Task Add(TierList tierList);
 
+        Task Update(TierList tierList);
+
+        Task Delete(long tierListId);
+
         Task<TierList> GetById(long id);
 
-        Task<IReadOnlyList<TierList>> GetByName(string name);
+        Task<bool> IsExist(long id);
 
-        Task<IReadOnlyList<TierList>> GetByUser(User user);
+        Task<IReadOnlyList<TierList>> GetByPageFilter(int page, int pageSize, TierListFilter filter);
+
     }
 }

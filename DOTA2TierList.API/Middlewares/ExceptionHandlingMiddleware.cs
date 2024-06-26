@@ -1,5 +1,5 @@
 ﻿using DOTA2TierList.API.Contracts;
-using DOTA2TierList.Logic.Exceptions;
+using DOTA2TierList.Application.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Net;

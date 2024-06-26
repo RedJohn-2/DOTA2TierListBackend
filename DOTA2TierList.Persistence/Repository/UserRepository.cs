@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using DOTA2TierList.Logic.Exceptions;
 using DOTA2TierList.Logic.Models;
 using DOTA2TierList.Logic.Models.Enums;
 using DOTA2TierList.Logic.Store;
@@ -27,12 +26,12 @@ namespace DOTA2TierList.Persistence.Repository
         public async Task AddRole(long userId, RoleEnum role)
         {
             var userEntity = await _db.Users.Include(u => u.Roles)
-                .FirstOrDefaultAsync(u => u.Id == userId) ?? throw new UserNotFoundException();
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
             var roleEntity = await _db.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.Id == (int)role)
                 ?? throw new Exception();
 
-            userEntity.Roles.Add(roleEntity);
+            userEntity!.Roles.Add(roleEntity!);
 
             await _db.SaveChangesAsync();
         }
@@ -53,12 +52,11 @@ namespace DOTA2TierList.Persistence.Repository
         public async Task DeleteRole(long userId, RoleEnum role)
         {
             var userEntity = await _db.Users.Include(u => u.Roles)
-                .FirstOrDefaultAsync(u => u.Id == userId) ?? throw new UserNotFoundException();
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
-            var roleEntity = await _db.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.Id == (int)role)
-                ?? throw new Exception();
+            var roleEntity = await _db.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.Id == (int)role);
 
-            userEntity.Roles.Remove(roleEntity);
+            userEntity!.Roles.Remove(roleEntity!);
 
             await _db.SaveChangesAsync();
         }
@@ -108,25 +106,25 @@ namespace DOTA2TierList.Persistence.Repository
 
         public async Task<IReadOnlyList<User>> GetByPageFilter(int page, int pageSize, UserFilter filter)
         {
-            var usersQuery = _db.Users.AsNoTracking();
+            var query = _db.Users.AsNoTracking();
 
             if (!string.IsNullOrEmpty(filter.Name))
             {
-                usersQuery = usersQuery.Where(u => u.Name == filter.Name);
+                query = query.Where(u => u.Name == filter.Name);
             }
 
             if (!string.IsNullOrEmpty(filter.Email))
             {
-                usersQuery = usersQuery.Where(u => u.Email == filter.Email);
+                query = query.Where(u => u.Email == filter.Email);
             }
 
 
-            var usersEntity = await usersQuery
+            var userEntities = await query
                 .Skip(pageSize * (page - 1))
                 .Take(pageSize)
                 .ToListAsync();
 
-            var users = _mapper.Map<IReadOnlyList<User>>(usersEntity);
+            var users = _mapper.Map<IReadOnlyList<User>>(userEntities);
 
             return users;
         }
@@ -134,11 +132,10 @@ namespace DOTA2TierList.Persistence.Repository
         public async Task<IReadOnlyList<Role>> GetRoles(long userId)
         {
             var usersEntity = await _db.Users.AsNoTracking().Include(u => u.Roles)
-                .FirstOrDefaultAsync(u => u.Id == userId)
-                ?? throw new UserNotFoundException();
+                .FirstOrDefaultAsync(u => u.Id == userId);
 
 
-            var roles = _mapper.Map<IReadOnlyList<Role>>(usersEntity.Roles);
+            var roles = _mapper.Map<IReadOnlyList<Role>>(usersEntity!.Roles);
 
             return roles;
         }

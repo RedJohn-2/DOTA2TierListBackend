@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using DOTA2TierList.Logic.Exceptions;
+using DOTA2TierList.Application.Exceptions;
 using DOTA2TierList.Application.Interfaces.Auth;
 using DOTA2TierList.Logic.Models;
 using DOTA2TierList.Logic.Models.Enums;
@@ -118,6 +118,22 @@ namespace DOTA2TierList.Application.Services
 
         public async Task Update(long userId, string? name, string? email)
         {
+            var user = await GetById(userId);
+
+            if (user == null)
+            {
+                throw new UserNotFoundException();
+            }
+
+            if (email != null)
+            {
+                user = await GetByEmail(email);
+
+                if (user != null) 
+                {
+                    throw new UserDuplicateException();
+                }
+            }
 
             await _userStore.UpdateData(userId: userId, name: name, email: email);
     

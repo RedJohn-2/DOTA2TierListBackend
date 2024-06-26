@@ -44,7 +44,8 @@ namespace DOTA2TierList.Persistence.Mapping
             CreateMap<TierListType, TierListTypeEntity>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => (int)src.Type));
 
-            CreateMap<TierList, TierListEntity>();
+            CreateMap<TierList, TierListEntity>()
+                .ForMember(dest => dest.Tiers, opt => opt.MapFrom(src => new List<TierEntity>()));
 
             CreateMap<Tier, TierEntity>();
 

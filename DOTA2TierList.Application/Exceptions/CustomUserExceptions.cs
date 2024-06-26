@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DOTA2TierList.Logic.Exceptions
+namespace DOTA2TierList.Application.Exceptions
 {
     public class UserNotFoundException : NotFoundException
     { public UserNotFoundException(string msg = "User not found!") : base(msg) { } }
