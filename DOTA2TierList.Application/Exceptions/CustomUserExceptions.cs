@@ -12,6 +12,9 @@ namespace DOTA2TierList.Application.Exceptions
     public class AuthenticationException : Exception
     { public AuthenticationException(string msg = "") : base(msg) { } }
 
+    public class ForbiddenException : Exception
+    { public ForbiddenException(string msg = "") : base(msg) { } }
+
     public class UserDuplicateException : DuplicateException
     { public UserDuplicateException(string msg = "User with this email has already been registered!") : base(msg) { } }
 

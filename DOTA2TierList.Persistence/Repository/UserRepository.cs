@@ -72,14 +72,20 @@ namespace DOTA2TierList.Persistence.Repository
 
         public async Task<User?> GetByEmail(string email)
         {
-            UserEntity? userEntity = await _db.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == email);
+            UserEntity? userEntity = await _db.Users
+                .AsNoTracking()
+                .Include(u => u.Roles)
+                .FirstOrDefaultAsync(x => x.Email == email);
             var user = _mapper.Map<User>(userEntity);
             return user;
         }
 
         public async Task<User?> GetById(long id)
         {
-            UserEntity? userEntity = await _db.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+            UserEntity? userEntity = await _db.Users
+                .AsNoTracking()
+                .Include(u => u.Roles)
+                .FirstOrDefaultAsync(x => x.Id == id);
             var user = _mapper.Map<User>(userEntity);
             return user;
 

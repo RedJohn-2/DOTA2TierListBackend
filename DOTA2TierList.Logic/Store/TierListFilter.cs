@@ -8,5 +8,5 @@ using System.Threading.Tasks;
 
 namespace DOTA2TierList.Logic.Store
 {
-    public record TierListFilter(string? Name, TierListTypeEnum? Type, DateTime? ModifiedDate, User? user);
+    public record TierListFilter(string? Name, TierListTypeEnum? Type, DateTime? ModifiedDate, long? UserId);
 }

@@ -17,7 +17,7 @@ namespace DOTA2TierList.Logic.Store
 
         Task<TierList> GetById(long id);
 
-        Task<bool> IsExist(long id);
+        Task<TierList> GetOnlyTierListById(long id);
 
         Task<IReadOnlyList<TierList>> GetByPageFilter(int page, int pageSize, TierListFilter filter);
 

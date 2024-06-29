@@ -20,6 +20,7 @@ namespace DOTA2TierList.Application.Services
 
         public async Task Add(TierList tierList)
         {
+            tierList.ModifiedDate = DateTime.UtcNow;
             await _tierListStore.Add(tierList);
         }
 
@@ -35,25 +36,35 @@ namespace DOTA2TierList.Application.Services
             return tierList;
         }
 
-        public async Task Delete(long tierListId)
+        public async Task Delete(long tierListId, long userId)
         {
-            var isExist = await _tierListStore.IsExist(tierListId);
+            var exsistedTierList = await _tierListStore.GetOnlyTierListById(tierListId);
 
-            if (!isExist)
+            if (exsistedTierList is null)
             {
                 throw new TierListNotFoundException();
+            }
+
+            if (exsistedTierList.UserId != userId)
+            {
+                throw new ForbiddenException();
             }
 
             await _tierListStore.Delete(tierListId);
         }
 
-        public async Task Update(TierList tierList)
+        public async Task Update(TierList tierList, long userId)
         {
-            var isExist = await _tierListStore.IsExist(tierList.Id);
+            var exsistedTierList = await _tierListStore.GetOnlyTierListById(tierList.Id);
 
-            if (!isExist)
+            if (exsistedTierList is null)
             {
                 throw new TierListNotFoundException();
+            }
+
+            if (exsistedTierList.UserId != userId)
+            {
+                throw new ForbiddenException();
             }
 
             tierList.ModifiedDate = DateTime.UtcNow;

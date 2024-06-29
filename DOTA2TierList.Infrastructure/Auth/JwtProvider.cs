@@ -37,7 +37,7 @@ namespace DOTA2TierList.Infrastructure.Auth
             var token = new JwtSecurityToken(
                 claims: claims,
                 signingCredentials: signingCredentials,
-                expires: DateTime.UtcNow.AddSeconds(_jwtOptions.ExpiresAccessTokenSeconds)
+                expires: DateTime.Now.AddSeconds(_jwtOptions.ExpiresAccessTokenSeconds)
                 );
 
             var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
@@ -69,14 +69,15 @@ namespace DOTA2TierList.Infrastructure.Auth
             {
                 ValidateIssuer = false,
                 ValidateAudience = false,
-                ValidateLifetime = true,
+                ValidateLifetime = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions!.SecretKey))
             };
             
-            var validationResult = await new JwtSecurityTokenHandler().ValidateTokenAsync(token, validation);
+            var validationResult = (await new JwtSecurityTokenHandler().ValidateTokenAsync(token, validation)) ?? throw new AuthenticationException();
 
-            return long.Parse(validationResult.Claims["userId"].ToString() ?? throw new AuthenticationException());
+            var id = validationResult.Claims["userId"] ?? throw new AuthenticationException();
+            return long.Parse(id.ToString()!);
         }
 
     }

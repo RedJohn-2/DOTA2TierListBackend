@@ -40,6 +40,7 @@ namespace DOTA2TierList.Persistence.Repository
             var tierListEntity = await _db.TierLists.Where(tl => tl.Id == id)
                 .Include(tl => tl.Tiers)
                 .Include(tl => tl.User)
+                .Include(tl => tl.Type)
                 .FirstOrDefaultAsync();
             
             var tierList = _mapper.Map<TierList>(tierListEntity);
@@ -48,28 +49,38 @@ namespace DOTA2TierList.Persistence.Repository
 
         }
 
+        public async Task<TierList> GetOnlyTierListById(long id)
+        {
+            var tierListEntity = await _db.TierLists.Where(tl => tl.Id == id)
+                .FirstOrDefaultAsync();
+
+            var tierList = _mapper.Map<TierList>(tierListEntity);
+
+            return tierList;
+        }
+
         public async Task<IReadOnlyList<TierList>> GetByPageFilter(int page, int pageSize, TierListFilter filter)
         {
             var query = _db.TierLists.AsNoTracking();
 
             if (!string.IsNullOrEmpty(filter.Name))
             {
-                query = query.Where(u => u.Name == filter.Name);
+                query = query.Where(tl => tl.Name == filter.Name);
             }
 
             if (filter.ModifiedDate is not null)
             {
-                query = query.Where(u => u.ModifiedDate == filter.ModifiedDate);
+                query = query.Where(tl => tl.ModifiedDate >= filter.ModifiedDate);
             }
 
             if (filter.Type is not null)
             {
-                query = query.Where(u => u.TypeId == (int)filter.Type);
+                query = query.Where(tl => tl.TypeId == (int)filter.Type);
             }
 
-            if (filter.user is not null)
+            if (filter.UserId is not null)
             {
-                query = query.Where(u => u.UserId == filter.user.Id);
+                query = query.Where(tl => tl.UserId == filter.UserId);
             }
 
             var tierListEntities = await query
@@ -80,13 +91,6 @@ namespace DOTA2TierList.Persistence.Repository
             var tierLists = _mapper.Map<IReadOnlyList<TierList>>(tierListEntities);
 
             return tierLists;
-        }
-
-        public async Task<bool> IsExist(long id)
-        {
-            var tierListEntity = await _db.TierLists.Where(tl => tl.Id == id).FirstOrDefaultAsync();
-
-            return tierListEntity is not null;
         }
 
         public async Task Update(TierList tierList)

@@ -118,7 +118,7 @@ namespace DOTA2TierList.Application.Services
 
         public async Task Update(long userId, string? name, string? email)
         {
-            var user = await GetById(userId);
+            var user = await _userStore.GetById(userId);
 
             if (user == null)
             {
@@ -127,7 +127,7 @@ namespace DOTA2TierList.Application.Services
 
             if (email != null)
             {
-                user = await GetByEmail(email);
+                user = await _userStore.GetByEmail(email);
 
                 if (user != null) 
                 {

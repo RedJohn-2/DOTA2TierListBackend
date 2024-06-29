@@ -29,6 +29,7 @@ builder.Services.AddAutoMapper(typeof(DtoMappingProfile).Assembly, typeof(DaoMap
 builder.Services.AddValidatorsFromAssemblyContaining<UserRequestValidator>();
 
 builder.Services.AddUserService();
+builder.Services.AddTierListService();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

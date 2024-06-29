@@ -19,16 +19,15 @@ namespace DOTA2TierList.API.Controllers
 
         private readonly IMapper _mapper;
 
-        private readonly IValidator<TierListRequest> _validator;
+        //private readonly IValidator<TierListRequest> _validator;
 
         public TierListController(
             TierListService tierListService,
-            IMapper mapper,
-            IValidator<TierListRequest> validator)
+            IMapper mapper)
         {
             _tierListService = tierListService;
             _mapper = mapper;
-            _validator = validator;
+            //_validator = validator;
         }
 
         [HttpGet("[action]/{id:long}")]
@@ -55,7 +54,7 @@ namespace DOTA2TierList.API.Controllers
         [Authorize(Policy = "User")]
         public async Task<ActionResult> Create(TierListRequest request)
         {
-            await _validator.ValidateAndThrowAsync(request);
+            //await _validator.ValidateAndThrowAsync(request);
 
             var userId = long.Parse(User.Claims.FirstOrDefault(i => i.Type == "userId")!.Value);
 
@@ -72,7 +71,9 @@ namespace DOTA2TierList.API.Controllers
         [Authorize(Policy = "User")]
         public async Task<ActionResult> Delete(long id)
         {
-            await _tierListService.Delete(id);
+
+            var userId = long.Parse(User.Claims.FirstOrDefault(i => i.Type == "userId")!.Value);
+            await _tierListService.Delete(id, userId);
 
             return Ok();
         }
@@ -81,17 +82,15 @@ namespace DOTA2TierList.API.Controllers
         [Authorize(Policy = "User")]
         public async Task<ActionResult> Update(TierListRequest request, long id)
         {
-            await _validator.ValidateAndThrowAsync(request);
+            //await _validator.ValidateAndThrowAsync(request);
 
             var userId = long.Parse(User.Claims.FirstOrDefault(i => i.Type == "userId")!.Value);
 
             var tierList = _mapper.Map<TierList>(request);
 
-            tierList.UserId = userId;
-
             tierList.Id = id;
 
-            await _tierListService.Update(tierList);
+            await _tierListService.Update(tierList, userId);
 
             return Ok();
         }

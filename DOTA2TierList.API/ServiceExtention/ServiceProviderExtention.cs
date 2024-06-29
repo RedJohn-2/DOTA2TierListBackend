@@ -21,7 +21,13 @@ namespace DOTA2TierList.API.ServiceExtentions
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<UserService>();
+            return services;
+        }
 
+        public static IServiceCollection AddTierListService(this IServiceCollection services)
+        {
+            services.AddScoped<ITierListStore, TierListRepository>();
+            services.AddScoped<TierListService>();
             return services;
         }
 
