@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using DOTA2TierList.Logic.Models;
+using DOTA2TierList.Logic.Models.Enums;
 using DOTA2TierList.Logic.Store;
 using DOTA2TierList.Persistence.Entities;
+using DOTA2TierList.Persistence.Entities.TierItemTypes;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -25,6 +27,15 @@ namespace DOTA2TierList.Persistence.Repository
         public async Task Add(TierList tierList)
         {
             var tierListEntity = _mapper.Map<TierListEntity>(tierList);
+
+            var itemsIds = tierListEntity.Tiers.SelectMany(tier => tier.Items.Select(item => item.Id)).ToList();
+            var itemsEntity = await _db.TierItems.Where(item => itemsIds.Contains(item.Id)).ToArrayAsync();
+
+            foreach (var tier in tierListEntity.Tiers)
+            {
+                tier.Items = itemsEntity.Where(item => tier.Items.Select(ti => ti.Id).Contains(item.Id)).ToList();
+            }
+
             await _db.TierLists.AddAsync(tierListEntity);
             await _db.SaveChangesAsync();
         }
