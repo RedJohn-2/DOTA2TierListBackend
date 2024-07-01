@@ -14,6 +14,6 @@ namespace DOTA2TierList.Persistence.Entities
 
         public string ImageURL{ get; set; } = string.Empty;
 
-        public List<TierEntity> Tiers { get; set; } = [];
+        public List<TierEntity>? Tiers { get; set; }
     }
 }

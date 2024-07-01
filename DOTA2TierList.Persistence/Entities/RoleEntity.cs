@@ -12,6 +12,6 @@ namespace DOTA2TierList.Persistence.Entities
 
         public string Name { get; set; } = string.Empty;
 
-        public List<UserEntity> Users { get; set; } = [];
+        public List<UserEntity>? Users { get; set; }
     }
 }

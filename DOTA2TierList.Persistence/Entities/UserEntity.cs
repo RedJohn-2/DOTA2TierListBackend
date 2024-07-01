@@ -20,9 +20,9 @@ namespace DOTA2TierList.Persistence.Entities
 
         public DateTime? RefreshTokenExpires { get; set; }
 
-        public List<RoleEntity> Roles { get; set; } = [];
+        public List<RoleEntity>? Roles { get; set; }
 
-        public List<TierListEntity> TierLists { get; set; } = [];
+        public List<TierListEntity>? TierLists { get; set; }
 
     }
 }

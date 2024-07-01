@@ -17,13 +17,13 @@ namespace DOTA2TierList.Persistence.Entities
 
         public int TypeId { get; set; }
 
-        public TierListTypeEntity Type { get; set; } = new();
+        public TierListTypeEntity? Type { get; set; }
 
         public DateTime ModifiedDate { get; set; }
 
         public long UserId { get; set; }
-        public UserEntity User { get; set; } = new();
+        public UserEntity? User { get; set; }
 
-        public List<TierEntity> Tiers { get; set; } = [];
+        public List<TierEntity>? Tiers { get; set; }
     }
 }

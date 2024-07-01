@@ -6,7 +6,7 @@ namespace DOTA2TierList.API.Contracts.TierListContracts
     public record TierListRequest(
         string Name,
         string? Description,
-        TierListTypeRequest Type,
+        int Type,
         List<TierRequest> Tiers
         );
 }

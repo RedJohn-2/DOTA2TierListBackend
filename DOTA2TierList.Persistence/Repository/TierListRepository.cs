@@ -27,17 +27,21 @@ namespace DOTA2TierList.Persistence.Repository
         public async Task Add(TierList tierList)
         {
             var tierListEntity = _mapper.Map<TierListEntity>(tierList);
-
-            var itemsIds = tierListEntity.Tiers.SelectMany(tier => tier.Items.Select(item => item.Id)).ToList();
-            var itemsEntity = await _db.TierItems.Where(item => itemsIds.Contains(item.Id)).ToArrayAsync();
-
-            foreach (var tier in tierListEntity.Tiers)
-            {
-                tier.Items = itemsEntity.Where(item => tier.Items.Select(ti => ti.Id).Contains(item.Id)).ToList();
-            }
+            await FillTiersWithItems(tierListEntity.Tiers!);
 
             await _db.TierLists.AddAsync(tierListEntity);
             await _db.SaveChangesAsync();
+        }
+
+        private async Task FillTiersWithItems(List<TierEntity> tiers)
+        {
+            var itemsIds = tiers.SelectMany(tier => tier.Items!.Select(item => item.Id)).ToList();
+            var itemsEntity = await _db.TierItems.Where(item => itemsIds.Contains(item.Id)).ToArrayAsync();
+
+            foreach (var tier in tiers)
+            {
+                tier.Items = itemsEntity.Where(item => tier.Items!.Select(ti => ti.Id).Contains(item.Id)).ToList();
+            }
         }
 
         public async Task Delete(long tierListId)
@@ -106,15 +110,39 @@ namespace DOTA2TierList.Persistence.Repository
 
         public async Task Update(TierList tierList)
         {
-            var tierEntities = _mapper.Map<IReadOnlyList<TierEntity>>(tierList.Tiers);
+            var updatedTierListEntity = _mapper.Map<TierListEntity>(tierList);
 
-            await _db.TierLists.Where(tl => tl.Id == tierList.Id)
-                .ExecuteUpdateAsync(tl => tl
-                .SetProperty(tl => tl.Name, tierList.Name)
-                .SetProperty(tl => tl.Description, tierList.Description)
-                .SetProperty(tl => tl.ModifiedDate, tierList.ModifiedDate)
-                .SetProperty(tl => tl.Tiers, tierEntities)
-                );
+            var existingTierListEntity = await _db.TierLists.Include(tl => tl.Tiers)
+                .FirstOrDefaultAsync(tl => tl.Id == tierList.Id);
+            var countExistedTiers = existingTierListEntity!.Tiers!.Count;
+            var countUpdatedTiers = updatedTierListEntity.Tiers!.Count;
+
+            if (countUpdatedTiers > countExistedTiers)
+            {
+                var newTiers = updatedTierListEntity.Tiers.Skip(countExistedTiers).ToList();
+                existingTierListEntity.Tiers.AddRange(newTiers);
+            }
+            else if (countUpdatedTiers < countExistedTiers)
+            {
+                existingTierListEntity.Tiers
+                    .RemoveRange(countUpdatedTiers, countExistedTiers - countUpdatedTiers);
+            }
+
+            for (int i = 0; i < countUpdatedTiers; i++) 
+            {
+                existingTierListEntity.Tiers[i].Name = updatedTierListEntity.Tiers[i].Name;
+                existingTierListEntity.Tiers[i].Description = updatedTierListEntity.Tiers[i].Description;
+                existingTierListEntity.Tiers[i].Items = updatedTierListEntity.Tiers[i].Items;
+            }
+
+            await FillTiersWithItems(existingTierListEntity.Tiers);
+
+            existingTierListEntity.Name = updatedTierListEntity.Name;
+            existingTierListEntity.Description = updatedTierListEntity.Description;
+            existingTierListEntity.TypeId = updatedTierListEntity.TypeId;
+
+            await _db.SaveChangesAsync();
+
         }
     }
 }
