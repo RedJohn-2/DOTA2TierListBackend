@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DOTA2TierList.Logic.Models
 {
+    
     public class User
     {
 

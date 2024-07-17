@@ -31,7 +31,7 @@ namespace DOTA2TierList.Persistence.Repository
             var roleEntity = await _db.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.Id == (int)role)
                 ?? throw new Exception();
 
-            userEntity!.Roles.Add(roleEntity!);
+            userEntity!.Roles!.Add(roleEntity!);
 
             await _db.SaveChangesAsync();
         }
@@ -42,7 +42,7 @@ namespace DOTA2TierList.Persistence.Repository
 
             var role = await _db.Roles.FirstOrDefaultAsync(r => r.Id == (int)RoleEnum.User);
 
-            userEntity.Roles.Add(role!);
+            userEntity.Roles!.Add(role!);
 
             await _db.Users.AddAsync(userEntity);
 

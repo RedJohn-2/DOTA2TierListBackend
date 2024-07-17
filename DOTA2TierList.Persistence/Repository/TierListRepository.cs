@@ -140,6 +140,7 @@ namespace DOTA2TierList.Persistence.Repository
             existingTierListEntity.Name = updatedTierListEntity.Name;
             existingTierListEntity.Description = updatedTierListEntity.Description;
             existingTierListEntity.TypeId = updatedTierListEntity.TypeId;
+            existingTierListEntity.ModifiedDate = updatedTierListEntity.ModifiedDate;
 
             await _db.SaveChangesAsync();
 

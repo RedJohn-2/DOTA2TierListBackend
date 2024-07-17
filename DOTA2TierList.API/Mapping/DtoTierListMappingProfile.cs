@@ -20,8 +20,7 @@ namespace DOTA2TierList.API.Mapping
                 .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.User.Name));
 
             CreateMap<TierItemRequest, TierItem>()
-                .ForMember(dest => dest, opt =>
-                opt.MapFrom(src => TierItemFactory.CreateTierItem((TierListTypeEnum)src.Type, src.Id)));
+                .ConstructUsing(src => TierItemFactory.CreateTierItem((TierListTypeEnum)src.Type, src.Id));
 
             CreateMap<TierRequest, Tier>();
 
