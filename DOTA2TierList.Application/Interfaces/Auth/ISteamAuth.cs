@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DOTA2TierList.Application.Services
+namespace DOTA2TierList.Application.Interfaces.Auth
 {
-    public class TierListItemService
+    public interface ISteamAuth
     {
-
+        string GetSteamAuthURL(string returnUrl);
     }
 }

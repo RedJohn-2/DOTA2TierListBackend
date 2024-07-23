@@ -5,7 +5,7 @@ namespace DOTA2TierList.API.Contracts.TierListContracts
 {
     public record TierListResponse(
         string Name,
-        string Description,
+        string? Description,
         TierListTypeResponse Type,
         DateTime ModifiedDate,
         string Author,

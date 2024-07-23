@@ -19,15 +19,18 @@ namespace DOTA2TierList.Application.Services
         private readonly IUserStore _userStore;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtProvider _jwtProvider;
+        private readonly ISteamAuth _steamAuth;
 
         public UserService(
             IUserStore userStore, 
             IPasswordHasher passwordHasher,
-            IJwtProvider jwtProvider)
+            IJwtProvider jwtProvider,
+            ISteamAuth steamAuth)
         {
             _userStore = userStore;
             _passwordHasher = passwordHasher;
             _jwtProvider = jwtProvider;
+            _steamAuth = steamAuth;
         }
 
         public async Task Register(User user)
@@ -68,6 +71,11 @@ namespace DOTA2TierList.Application.Services
             await _userStore.UpdateRefreshToken(existedUser.Id, existedUser.RefreshToken, existedUser.RefreshTokenExpires);
 
             return (accessToken, refreshToken);
+        }
+
+        public string SteamAuth(string returnUrl)
+        {
+            return _steamAuth.GetSteamAuthURL(returnUrl);
         }
 
 

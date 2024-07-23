@@ -10,16 +10,25 @@ using Microsoft.Extensions.Options;
 using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using DOTA2TierList.Logic.Models.Enums;
+using AspNet.Security.OpenId.Steam;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using AngleSharp.Dom;
+using static System.Net.WebRequestMethods;
+using Microsoft.Owin.Infrastructure;
+using Microsoft.Owin.Host.SystemWeb;
+using AspNet.Security.OpenId;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace DOTA2TierList.API.ServiceExtentions
 {
-    public static class ServiceProviderExtention
+    public static class ServiceProviderExtentions
     {
         public static IServiceCollection AddUserService(this IServiceCollection services)
         {
             services.AddScoped<IUserStore, UserRepository>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<IJwtProvider, JwtProvider>();
+            services.AddScoped<ISteamAuth,  SteamAuth>();
             services.AddScoped<UserService>();
             return services;
         }

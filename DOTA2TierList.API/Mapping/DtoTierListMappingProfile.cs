@@ -17,7 +17,12 @@ namespace DOTA2TierList.API.Mapping
             CreateMap<Tier, TierResponse>();
             CreateMap<TierListType, TierListTypeResponse>();
             CreateMap<TierList, TierListResponse>()
-                .ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.User.Name));
+                .ConstructUsing((src, context) =>
+                {
+                    var type = context.Mapper.Map<TierListTypeResponse>(src.Type);
+                    var tiers = context.Mapper.Map<List<TierResponse>>(src.Tiers);
+                    return new TierListResponse(src.Name, src.Description, type, src.ModifiedDate, src.User.Name, tiers);
+                });
 
             CreateMap<TierItemRequest, TierItem>()
                 .ConstructUsing(src => TierItemFactory.CreateTierItem((TierListTypeEnum)src.Type, src.Id));
