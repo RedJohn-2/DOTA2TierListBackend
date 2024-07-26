@@ -14,15 +14,19 @@ namespace DOTA2TierList.Logic.Models
 
         public string Name { get; set; } = string.Empty;    
 
-        public string Email { get; set; } = string.Empty;
+        public string? Email { get; set; } = string.Empty;
 
-        public string Password { get; set; } = string.Empty;
+        public string? Password { get; set; } = string.Empty;
 
-        public string PasswordHash { get; set; } = string.Empty;
+        public string? PasswordHash { get; set; } = string.Empty;
 
         public string? RefreshToken {  get; set; }
 
         public DateTime? RefreshTokenExpires {  get; set; }
+
+        public long? SteamProfileId { get; set; }
+
+        public SteamProfile? SteamProfile { get; set; }
 
         public List<TierList> TierLists { get; set; } = new();
 

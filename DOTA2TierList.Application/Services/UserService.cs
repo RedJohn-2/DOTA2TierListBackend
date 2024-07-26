@@ -75,9 +75,43 @@ namespace DOTA2TierList.Application.Services
 
         public string SteamAuth(string returnUrl)
         {
-            return _steamAuth.GetSteamAuthURL(returnUrl);
+            return _steamAuth.GetSteamAuthUrl(returnUrl);
         }
 
+        public string GetVerifyAuthUrl(string queryParams)
+        {
+            return _steamAuth.GetVerifyAuthQuery(queryParams);
+        }
+
+        public bool IsSuccessSteamAuth(string responseJson)
+        {
+            return _steamAuth.IsSuccess(responseJson);
+        }
+
+        public async Task<(string, string)> SteamLogin(User user)
+        {
+
+            var existedUser = await _userStore.GetByEmail(user.Email);
+
+            if (existedUser == null)
+            {
+                throw new AuthenticationException();
+            }
+
+
+            if (!_passwordHasher.VerifyPassword(user.Password, existedUser.PasswordHash))
+            {
+                throw new AuthenticationException();
+            }
+
+            var accessToken = _jwtProvider.GenerateAccessToken(existedUser);
+
+            var refreshToken = _jwtProvider.GenerateRefreshToken(existedUser);
+
+            await _userStore.UpdateRefreshToken(existedUser.Id, existedUser.RefreshToken, existedUser.RefreshTokenExpires);
+
+            return (accessToken, refreshToken);
+        }
 
         public async Task<(string, string)> Refresh(string accessToken, string refreshToken)
         {

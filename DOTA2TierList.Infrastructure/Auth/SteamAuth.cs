@@ -13,12 +13,13 @@ namespace DOTA2TierList.Infrastructure.Auth
     {
         private readonly SteamAuthOptions _steamAuthOptions;
         private const string SteamAuthBaseUrl = "https://steamcommunity.com/openid/login";
+        private const string DefualtNsString = "http://specs.openid.net/auth/2.0";
         public SteamAuth(IOptions<SteamAuthOptions> options)
         {
             _steamAuthOptions = options.Value;
         }
 
-        public string GetSteamAuthURL(string returnUrl)
+        public string GetSteamAuthUrl(string returnUrl)
         {
             var realm = GetBaseAddress(new Uri(returnUrl));
 
@@ -34,12 +35,50 @@ namespace DOTA2TierList.Infrastructure.Auth
         }
 
         private string GetBaseAddress(Uri uri)
-        {
+        { 
             string scheme = uri.Scheme;
             string host = uri.Host;
             string port = uri.IsDefaultPort ? "" : $":{uri.Port}";
 
             return $"{scheme}://{host}{port}";
+        }
+
+        public string GetVerifyAuthQuery(string queryParams)
+        {
+            var parameters = HttpUtility.ParseQueryString(queryParams);
+            parameters["openid.mode"] = "check_authentication";
+
+            var url = $"{SteamAuthBaseUrl}?{parameters}"; 
+
+            return url;
+        }
+
+        public bool IsSuccess(string response)
+        {
+            var lines = response.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var dictionary = new Dictionary<string, string>();
+
+            foreach (var line in lines)
+            {
+
+                var parts = line.Split(':', 2);
+
+                if (parts.Length == 2)
+                {
+                    var key = parts[0].Trim();
+                    var value = parts[1].Trim();
+
+                    dictionary[key] = value;
+                }
+            }
+
+            if (!dictionary.ContainsKey("ns") || dictionary["ns"] != DefualtNsString)
+            {
+                return false;
+            }
+
+            return dictionary.ContainsKey("is_valid") && bool.Parse(dictionary["is_valid"]);
         }
     }
 }

@@ -16,8 +16,6 @@ namespace DOTA2TierList.Persistence.Configurations
         {
             builder.HasKey(u =>  u.Id);
 
-            builder.HasAlternateKey(u => u.Email);
-
             builder.
                 HasMany(u => u.Roles)
                 .WithMany(r => r.Users);

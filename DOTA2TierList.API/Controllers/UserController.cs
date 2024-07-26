@@ -17,6 +17,7 @@ using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using RestSharp;
+using AngleSharp.Common;
 
 namespace DOTA2TierList.API.Controllers
 {
@@ -30,70 +31,97 @@ namespace DOTA2TierList.API.Controllers
 
         private readonly IValidator<IUserRequest> _validator;
 
-        private readonly Regex _accountIdRegex = new Regex(@"^http://steamcommunity\.com/openid/id/(7[0-9]{15,25})$", RegexOptions.Compiled);
+        private readonly JwtOptions _jwtOptions;
 
         public UserController(
             UserService userService,
             IMapper mapper,
-            IValidator<IUserRequest> validator)
+            IValidator<IUserRequest> validator,
+            IOptions<JwtOptions> options)
         {
             _userService = userService;
             _mapper = mapper;
             _validator = validator;
+            _jwtOptions = options.Value;
         }
 
 
         [HttpPost("[action]")]
-        public IActionResult SignInSteam([FromBody]string returnUrl)
+        public IActionResult SignInSteam(string returnUrl)
         {
-
             return Json(_userService.SteamAuth(returnUrl));
         }
 
         
 
-        [HttpPost("[action]")]
+        [HttpGet("[action]")]
         public async Task<IActionResult> VerifySteam()
         {
-            var request = HttpContext.Request;
-            //Here we can retrieve the claims
-            // read external identity from the temporary cookie
-            //var authenticateResult = HttpContext.GetOwinContext().Authentication.AuthenticateAsync("ExternalCookie");
-            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            var queryParams = Request.QueryString;
 
-            if (result.Succeeded != true)
-            {
-                throw new Exception("External authentication error");
+            var verifyAuthUrl = _userService.GetVerifyAuthUrl(queryParams.ToString());
+
+            if (verifyAuthUrl == null) { 
+                return Unauthorized();
             }
 
-            // retrieve claims of the external user
-            var externalUser = result.Principal;
-            if (externalUser == null)
+            using var client = new HttpClient();
+            try
             {
-                throw new Exception("External authentication error");
+                var verifyResult = await client.GetAsync(verifyAuthUrl);
+
+                if (verifyResult.IsSuccessStatusCode)
+                {
+                    var content = await verifyResult.Content.ReadAsStringAsync();
+                    var isAuth = _userService.IsSuccessSteamAuth(content);
+
+
+                    if (!isAuth)
+                    {
+                        return Unauthorized();
+                    }
+
+                    else
+                    {
+                        await SteamLogin();
+
+                        return Ok();
+                    }
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+            }
+            catch
+            {
+                return Unauthorized();
             }
 
-            // retrieve claims of the external user
-            var claims = externalUser.Claims.ToList();
-
-            // try to determine the unique id of the external user - the most common claim type for that are the sub claim and the NameIdentifier
-            // depending on the external provider, some other claim type might be used
-            //var userIdClaim = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Subject);
-            var userIdClaim = claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
-            if (userIdClaim == null)
-            {
-                throw new Exception("Unknown userid");
-            }
-
-            var externalUserId = userIdClaim.Value;
-            var externalProvider = userIdClaim.Issuer;
-
-            // use externalProvider and externalUserId to find your user, or provision a new user
-
-            return Ok();
 
         }
+        private async Task<ActionResult> SteamLogin()
+        {
 
+            User user = new User();
+            (var accessToken, var refreshToken) = await _userService.SteamLogin(user);
+
+            Response.Cookies.Append(_jwtOptions.CookieAccessKey, accessToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTime.UtcNow.AddDays(7)
+                });
+
+            Response.Cookies.Append(_jwtOptions.CookieRefreshKey, refreshToken,
+                new CookieOptions
+                {
+                    HttpOnly = true,
+                    Expires = DateTime.UtcNow.AddDays(7)
+                });
+
+            return Ok();
+        }
 
         [HttpGet("[action]/{id:long}")]
         public async Task<ActionResult> GetById(long id)
@@ -128,7 +156,7 @@ namespace DOTA2TierList.API.Controllers
         }
 
         [HttpPost("[action]")]
-        public async Task<ActionResult> Login(LoginUserRequest request, [FromServices] IOptions<JwtOptions> options)
+        public async Task<ActionResult> Login(LoginUserRequest request)
         {
             await _validator.ValidateAndThrowAsync(request);
 
@@ -136,14 +164,14 @@ namespace DOTA2TierList.API.Controllers
 
             (var accessToken, var refreshToken) = await _userService.Login(user);
 
-            Response.Cookies.Append(options.Value.CookieAccessKey, accessToken,
+            Response.Cookies.Append(_jwtOptions.CookieAccessKey, accessToken,
                 new CookieOptions
                 {
                     HttpOnly = true,
                     Expires = DateTime.UtcNow.AddDays(7)
                 });
 
-            Response.Cookies.Append(options.Value.CookieRefreshKey, refreshToken,
+            Response.Cookies.Append(_jwtOptions.CookieRefreshKey, refreshToken,
                 new CookieOptions
                 {
                     HttpOnly = true,

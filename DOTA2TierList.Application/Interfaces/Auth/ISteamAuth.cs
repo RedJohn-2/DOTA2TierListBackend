@@ -8,6 +8,10 @@ namespace DOTA2TierList.Application.Interfaces.Auth
 {
     public interface ISteamAuth
     {
-        string GetSteamAuthURL(string returnUrl);
+        string GetSteamAuthUrl(string returnUrl);
+
+        string GetVerifyAuthQuery(string queryParams);
+
+        bool IsSuccess(string response);
     }
 }
