@@ -14,6 +14,8 @@ namespace DOTA2TierList.Logic.Store
 
         Task<User?> GetById(long id);
 
+        Task<User?> GetBySteamId(long id);
+
         Task<IReadOnlyList<User>> GetAll();
 
         Task<IReadOnlyList<User>> GetByPage(int page, int pageSize);

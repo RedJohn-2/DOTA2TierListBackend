@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using DOTA2TierList.Application.Exceptions;
+using DOTA2TierList.Application.Interfaces;
 using DOTA2TierList.Application.Interfaces.Auth;
 using DOTA2TierList.Logic.Models;
 using DOTA2TierList.Logic.Models.Enums;
@@ -20,30 +21,37 @@ namespace DOTA2TierList.Application.Services
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtProvider _jwtProvider;
         private readonly ISteamAuth _steamAuth;
+        private readonly ISteamApiProvider _steamApiProvider;
+        private readonly UserRolesService _userRolesService;
 
         public UserService(
             IUserStore userStore, 
             IPasswordHasher passwordHasher,
             IJwtProvider jwtProvider,
-            ISteamAuth steamAuth)
+            ISteamAuth steamAuth,
+            ISteamApiProvider steamApiProvider,
+            UserRolesService userRolesService)
         {
             _userStore = userStore;
             _passwordHasher = passwordHasher;
             _jwtProvider = jwtProvider;
             _steamAuth = steamAuth;
+            _steamApiProvider = steamApiProvider;
+            _userRolesService = userRolesService;
         }
 
         public async Task Register(User user)
         {
            
-            var existedUser = await _userStore.GetByEmail(user.Email);
+            var existedUser = await _userStore.GetByEmail(user.Email!);
 
             if (existedUser != null)
             {
                 throw new UserDuplicateException();
             }
             
-            user.PasswordHash = _passwordHasher.Hash(user.Password);
+            user.PasswordHash = _passwordHasher.Hash(user.Password!);
+            _userRolesService.AddRoles(user, RoleEnum.User);
 
             await _userStore.Create(user);
         }
@@ -51,7 +59,7 @@ namespace DOTA2TierList.Application.Services
         public async Task<(string, string)> Login(User user)
         {
 
-            var existedUser = await _userStore.GetByEmail(user.Email);
+            var existedUser = await _userStore.GetByEmail(user.Email!);
 
             if (existedUser == null)
             {
@@ -59,7 +67,7 @@ namespace DOTA2TierList.Application.Services
             }
 
 
-            if (!_passwordHasher.VerifyPassword(user.Password, existedUser.PasswordHash))
+            if (!_passwordHasher.VerifyPassword(user.Password!, existedUser.PasswordHash!))
             {
                 throw new AuthenticationException();
             }
@@ -88,27 +96,35 @@ namespace DOTA2TierList.Application.Services
             return _steamAuth.IsSuccess(responseJson);
         }
 
-        public async Task<(string, string)> SteamLogin(User user)
+        public async Task<(string, string)> SteamLogin(string claimedIdUrl)
         {
+            var steamId = _steamApiProvider.GetSteamId(claimedIdUrl);
 
-            var existedUser = await _userStore.GetByEmail(user.Email);
+            var user = await _userStore.GetBySteamId(steamId);
 
-            if (existedUser == null)
+            if (user == null)
             {
-                throw new AuthenticationException();
+
+                var steamUserInfo = await _steamApiProvider.GetDotaUserInfo(steamId);
+                user = new User
+                {
+                    Name = steamUserInfo.Name,
+                    SteamProfileId = steamId,
+                    SteamProfile = new SteamProfile
+                    {
+                        Id = steamId,
+                        MatchMakingRating = steamUserInfo.MatchMakingRating,
+                    }
+                };
+                _userRolesService.AddRoles(user, RoleEnum.User, RoleEnum.VerifyUser);
+                await _userStore.Create(user);
             }
 
+            var accessToken = _jwtProvider.GenerateAccessToken(user);
 
-            if (!_passwordHasher.VerifyPassword(user.Password, existedUser.PasswordHash))
-            {
-                throw new AuthenticationException();
-            }
+            var refreshToken = _jwtProvider.GenerateRefreshToken(user);
 
-            var accessToken = _jwtProvider.GenerateAccessToken(existedUser);
-
-            var refreshToken = _jwtProvider.GenerateRefreshToken(existedUser);
-
-            await _userStore.UpdateRefreshToken(existedUser.Id, existedUser.RefreshToken, existedUser.RefreshTokenExpires);
+            await _userStore.UpdateRefreshToken(user.Id, user.RefreshToken, user.RefreshTokenExpires);
 
             return (accessToken, refreshToken);
         }

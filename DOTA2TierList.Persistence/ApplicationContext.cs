@@ -15,6 +15,7 @@ namespace DOTA2TierList.Persistence
     public class ApplicationContext : DbContext
     {
         public DbSet<UserEntity> Users { get; set; }
+        public DbSet<SteamProfileEntity> SteamProfiles { get; set; }
         public DbSet<RoleEntity> Roles { get; set; }
         public DbSet<TierListEntity> TierLists { get; set; }
         public DbSet<TierEntity> Tiers { get; set; }

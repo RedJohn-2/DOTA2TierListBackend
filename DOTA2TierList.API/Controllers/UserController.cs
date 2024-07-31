@@ -83,7 +83,7 @@ namespace DOTA2TierList.API.Controllers
 
                     else
                     {
-                        await SteamLogin();
+                        await SteamLogin(Request.Query["openid.claimed_id"]!);
 
                         return Ok();
                     }
@@ -100,11 +100,10 @@ namespace DOTA2TierList.API.Controllers
 
 
         }
-        private async Task<ActionResult> SteamLogin()
+        private async Task<ActionResult> SteamLogin(string claimedIdUrl)
         {
 
-            User user = new User();
-            (var accessToken, var refreshToken) = await _userService.SteamLogin(user);
+            (var accessToken, var refreshToken) = await _userService.SteamLogin(claimedIdUrl);
 
             Response.Cookies.Append(_jwtOptions.CookieAccessKey, accessToken,
                 new CookieOptions

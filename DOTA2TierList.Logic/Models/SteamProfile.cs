@@ -8,7 +8,7 @@ namespace DOTA2TierList.Logic.Models
 {
     public class SteamProfile
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
         public int MatchMakingRating { get; set; }
         public long UserId { get; set; }
         public User User { get; set; } = null!;

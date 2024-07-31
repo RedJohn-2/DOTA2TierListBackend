@@ -18,6 +18,7 @@ namespace DOTA2TierList.Persistence.Mapping
         {
             CreateMap<RoleEntity, Role>()
                 .ForMember(dest => dest.Type, opt => opt.MapFrom(src => (RoleEnum)src.Id));
+            CreateMap<SteamProfileEntity, SteamProfile>();
 
             CreateMap<UserEntity, User>();
 
@@ -38,6 +39,7 @@ namespace DOTA2TierList.Persistence.Mapping
 
             CreateMap<Role, RoleEntity>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(src => (int)src.Type));
+            CreateMap<SteamProfile, SteamProfileEntity>();
 
             CreateMap<User, UserEntity>();
 

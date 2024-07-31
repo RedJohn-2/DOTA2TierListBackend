@@ -38,13 +38,13 @@ namespace DOTA2TierList.Persistence.Repository
 
         public async Task Create(User user)
         {
+
             var userEntity = _mapper.Map<UserEntity>(user);
 
-            var role = await _db.Roles.FirstOrDefaultAsync(r => r.Id == (int)RoleEnum.User);
+            if (userEntity.SteamProfile is not null)
+                await _db.SteamProfiles.AddAsync(userEntity.SteamProfile);
 
-            userEntity.Roles!.Add(role!);
-
-            await _db.Users.AddAsync(userEntity);
+            _db.Users.Attach(userEntity);
 
             await _db.SaveChangesAsync();
         }
@@ -56,7 +56,7 @@ namespace DOTA2TierList.Persistence.Repository
 
             var roleEntity = await _db.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.Id == (int)role);
 
-            userEntity!.Roles.Remove(roleEntity!);
+            userEntity!.Roles!.Remove(roleEntity!);
 
             await _db.SaveChangesAsync();
         }
@@ -133,6 +133,17 @@ namespace DOTA2TierList.Persistence.Repository
             var users = _mapper.Map<IReadOnlyList<User>>(userEntities);
 
             return users;
+        }
+
+        public async Task<User?> GetBySteamId(long steamId)
+        {
+            UserEntity? userEntity = await _db.Users
+               .AsNoTracking()
+               .Include(u => u.Roles)
+               .Include(s => s.SteamProfile)
+               .FirstOrDefaultAsync(x => x.SteamProfileId == steamId);
+            var user = _mapper.Map<User>(userEntity);
+            return user;
         }
 
         public async Task<IReadOnlyList<Role>> GetRoles(long userId)
