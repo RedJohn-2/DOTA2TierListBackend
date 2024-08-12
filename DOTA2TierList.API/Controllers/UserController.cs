@@ -164,6 +164,9 @@ namespace DOTA2TierList.API.Controllers
 
             (var accessToken, var refreshToken) = await _userService.Login(user);
 
+            if (accessToken == null || refreshToken == null)
+                return Unauthorized();
+
             Response.Cookies.Append(_jwtOptions.CookieAccessKey, accessToken,
                 new CookieOptions
                 {

@@ -57,7 +57,7 @@ namespace DOTA2TierList.Application.Services
             await _userStore.Create(user);
         }
 
-        public async Task<(string, string)> Login(User user)
+        public async Task<(string?, string?)> Login(User user)
         {
 
             var existedUser = await _userStore.GetByEmail(user.Email!);

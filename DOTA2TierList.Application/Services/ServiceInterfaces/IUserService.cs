@@ -10,7 +10,7 @@ namespace DOTA2TierList.Application.Services.ServiceInterfaces
     public interface IUserService
     {
         Task Register(User user);
-        Task<(string, string)> Login(User user);
+        Task<(string?, string?)> Login(User user);
         string SteamAuth(string returnUrl);
         string GetVerifyAuthUrl(string queryParams);
         bool IsSuccessSteamAuth(string responseJson);
