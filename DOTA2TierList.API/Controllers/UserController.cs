@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using RestSharp;
 using AngleSharp.Common;
+using DOTA2TierList.Application.Services.ServiceInterfaces;
 
 namespace DOTA2TierList.API.Controllers
 {
@@ -25,7 +26,7 @@ namespace DOTA2TierList.API.Controllers
     [Route("[controller]")]
     public class UserController : Controller
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
 
         private readonly IMapper _mapper;
 
@@ -34,7 +35,7 @@ namespace DOTA2TierList.API.Controllers
         private readonly JwtOptions _jwtOptions;
 
         public UserController(
-            UserService userService,
+            IUserService userService,
             IMapper mapper,
             IValidator<IUserRequest> validator,
             IOptions<JwtOptions> options)

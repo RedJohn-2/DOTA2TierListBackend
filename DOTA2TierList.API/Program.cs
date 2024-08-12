@@ -9,7 +9,6 @@ using DOTA2TierList.API.Validation;
 using DOTA2TierList.API.Mapping;
 using AutoMapper;
 using DOTA2TierList.Persistence.Mapping;
-using Microsoft.Owin.Host.SystemWeb;
 
 var builder = WebApplication.CreateBuilder(args);
 

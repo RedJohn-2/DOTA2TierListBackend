@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DOTA2TierList.API", "DOTA2T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DOTA2TierList.Logic", "DOTA2TierList.Logic\DOTA2TierList.Logic.csproj", "{27D9A791-A510-42EF-A2BB-7D1FF65C5251}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DOTA2TierList.API.Tests", "DOTA2TierList.API.Tests\DOTA2TierList.API.Tests.csproj", "{F12CE8DE-DCAE-48F0-A4B5-B91A708A0D28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{27D9A791-A510-42EF-A2BB-7D1FF65C5251}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27D9A791-A510-42EF-A2BB-7D1FF65C5251}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27D9A791-A510-42EF-A2BB-7D1FF65C5251}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F12CE8DE-DCAE-48F0-A4B5-B91A708A0D28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F12CE8DE-DCAE-48F0-A4B5-B91A708A0D28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F12CE8DE-DCAE-48F0-A4B5-B91A708A0D28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F12CE8DE-DCAE-48F0-A4B5-B91A708A0D28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
 ﻿using DOTA2TierList.Application.Exceptions;
+using DOTA2TierList.Application.Services.ServiceInterfaces;
 using DOTA2TierList.Logic.Models;
 using DOTA2TierList.Logic.Store;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DOTA2TierList.Application.Services
 {
-    public class TierListService
+    public class TierListService : ITierListService
     {
         private readonly ITierListStore _tierListStore;
 

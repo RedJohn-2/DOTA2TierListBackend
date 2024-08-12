@@ -1,4 +1,5 @@
-﻿using DOTA2TierList.Logic.Models;
+﻿using DOTA2TierList.Application.Services.ServiceInterfaces;
+using DOTA2TierList.Logic.Models;
 using DOTA2TierList.Logic.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DOTA2TierList.Application.Services
 {
-    public class UserRolesService
+    public class UserRolesService : IUserRolesService
     {
         public void AddRoles(User user, params RoleEnum[] roles)
         {

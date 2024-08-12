@@ -14,12 +14,11 @@ using AspNet.Security.OpenId.Steam;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using AngleSharp.Dom;
 using static System.Net.WebRequestMethods;
-using Microsoft.Owin.Infrastructure;
-using Microsoft.Owin.Host.SystemWeb;
 using AspNet.Security.OpenId;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using DOTA2TierList.Application.Interfaces;
 using DOTA2TierList.Infrastructure;
+using DOTA2TierList.Application.Services.ServiceInterfaces;
 
 namespace DOTA2TierList.API.ServiceExtentions
 {
@@ -32,15 +31,15 @@ namespace DOTA2TierList.API.ServiceExtentions
             services.AddScoped<IJwtProvider, JwtProvider>();
             services.AddScoped<ISteamAuth,  SteamAuth>();
             services.AddScoped<ISteamApiProvider, SteamApiProvider>();
-            services.AddScoped<UserRolesService>();
-            services.AddScoped<UserService>();
+            services.AddScoped<IUserRolesService, UserRolesService>();
+            services.AddScoped<IUserService, UserService>();
             return services;
         }
 
         public static IServiceCollection AddTierListService(this IServiceCollection services)
         {
             services.AddScoped<ITierListStore, TierListRepository>();
-            services.AddScoped<TierListService>();
+            services.AddScoped<ITierListService, TierListService>();
             return services;
         }
 

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using DOTA2TierList.API.Contracts.TierListContracts;
 using DOTA2TierList.Logic.Models;
 using DOTA2TierList.Logic.Store;
+using DOTA2TierList.Application.Services.ServiceInterfaces;
 
 namespace DOTA2TierList.API.Controllers
 {
@@ -15,14 +16,14 @@ namespace DOTA2TierList.API.Controllers
     [Route("[controller]")]
     public class TierListController : Controller
     {
-        private readonly TierListService _tierListService;
+        private readonly ITierListService _tierListService;
 
         private readonly IMapper _mapper;
 
         //private readonly IValidator<TierListRequest> _validator;
 
         public TierListController(
-            TierListService tierListService,
+            ITierListService tierListService,
             IMapper mapper)
         {
             _tierListService = tierListService;

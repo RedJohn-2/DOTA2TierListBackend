@@ -7,6 +7,7 @@ using AutoMapper;
 using DOTA2TierList.Application.Exceptions;
 using DOTA2TierList.Application.Interfaces;
 using DOTA2TierList.Application.Interfaces.Auth;
+using DOTA2TierList.Application.Services.ServiceInterfaces;
 using DOTA2TierList.Logic.Models;
 using DOTA2TierList.Logic.Models.Enums;
 using DOTA2TierList.Logic.Store;
@@ -15,14 +16,14 @@ using Microsoft.Extensions.Options;
 
 namespace DOTA2TierList.Application.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly IUserStore _userStore;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtProvider _jwtProvider;
         private readonly ISteamAuth _steamAuth;
         private readonly ISteamApiProvider _steamApiProvider;
-        private readonly UserRolesService _userRolesService;
+        private readonly IUserRolesService _userRolesService;
 
         public UserService(
             IUserStore userStore, 
@@ -30,7 +31,7 @@ namespace DOTA2TierList.Application.Services
             IJwtProvider jwtProvider,
             ISteamAuth steamAuth,
             ISteamApiProvider steamApiProvider,
-            UserRolesService userRolesService)
+            IUserRolesService userRolesService)
         {
             _userStore = userStore;
             _passwordHasher = passwordHasher;
