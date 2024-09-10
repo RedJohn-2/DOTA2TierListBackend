@@ -11,13 +11,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
 using DOTA2TierList.API.Contracts.UserContracts;
 using DOTA2TierList.API.Contracts;
-using Microsoft.AspNetCore.Authentication;
-using AspNet.Security.OpenId.Steam;
-using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using System.Security.Claims;
-using RestSharp;
-using AngleSharp.Common;
 using DOTA2TierList.Application.Services.ServiceInterfaces;
 
 namespace DOTA2TierList.API.Controllers
