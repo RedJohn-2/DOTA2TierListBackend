@@ -9,15 +9,17 @@ using DOTA2TierList.API.Validation;
 using DOTA2TierList.API.Mapping;
 using AutoMapper;
 using DOTA2TierList.Persistence.Mapping;
+using DOTA2TierList.API.Extentions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddAutoMapper(typeof(DtoUserMappingProfile).Assembly, typeof(DaoMappingProfile).Assembly);
-// Add services to the container.
-var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(connection));
+
+
+builder.Services.AddDbContext<ApplicationContext>(options => 
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
 
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
@@ -55,6 +57,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.ApplyMigrations();
 }
 
 app.UseExceptionHandling();
