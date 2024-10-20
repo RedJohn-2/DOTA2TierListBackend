@@ -7,6 +7,7 @@ using AutoMapper;
 using DOTA2TierList.Application.Exceptions;
 using DOTA2TierList.Application.Interfaces;
 using DOTA2TierList.Application.Interfaces.Auth;
+using DOTA2TierList.Application.Interfaces.DbInterfaces;
 using DOTA2TierList.Application.Services.ServiceInterfaces;
 using DOTA2TierList.Logic.Models;
 using DOTA2TierList.Logic.Models.Enums;
@@ -24,6 +25,7 @@ namespace DOTA2TierList.Application.Services
         private readonly ISteamAuth _steamAuth;
         private readonly ISteamApiProvider _steamApiProvider;
         private readonly IUserRolesService _userRolesService;
+        private readonly IUnitOfWork _unitOfWork;
 
         public UserService(
             IUserStore userStore, 
@@ -31,7 +33,8 @@ namespace DOTA2TierList.Application.Services
             IJwtProvider jwtProvider,
             ISteamAuth steamAuth,
             ISteamApiProvider steamApiProvider,
-            IUserRolesService userRolesService)
+            IUserRolesService userRolesService,
+            IUnitOfWork unitOfWork)
         {
             _userStore = userStore;
             _passwordHasher = passwordHasher;
@@ -39,22 +42,25 @@ namespace DOTA2TierList.Application.Services
             _steamAuth = steamAuth;
             _steamApiProvider = steamApiProvider;
             _userRolesService = userRolesService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task Register(User user)
         {
-           
-            var existedUser = await _userStore.GetByEmail(user.Email!);
-
-            if (existedUser != null)
+            await _unitOfWork.InTransaction(async () =>
             {
-                throw new UserDuplicateException();
-            }
-            
-            user.PasswordHash = _passwordHasher.Hash(user.Password!);
-            _userRolesService.AddRoles(user, RoleEnum.User);
+                var existedUser = await _userStore.GetByEmail(user.Email!);
 
-            await _userStore.Create(user);
+                if (existedUser != null)
+                {
+                    throw new UserDuplicateException();
+                }
+
+                user.PasswordHash = _passwordHasher.Hash(user.Password!);
+                _userRolesService.AddRoles(user, RoleEnum.User);
+
+                await _userStore.Create(user);
+            });
         }
 
         public async Task<(string?, string?)> Login(User user)

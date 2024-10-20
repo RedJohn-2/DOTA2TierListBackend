@@ -18,11 +18,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DOTA2TierList.Application\DOTA2TierList.Application.csproj" />
     <ProjectReference Include="..\DOTA2TierList.Logic\DOTA2TierList.Logic.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+    <Folder Include="Queries\UserQueries\" />
   </ItemGroup>
 
 </Project>

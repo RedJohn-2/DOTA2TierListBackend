@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using DOTA2TierList.API.Contracts.UserContracts;
 using DOTA2TierList.API.Contracts;
 using DOTA2TierList.Application.Services.ServiceInterfaces;
+using DOTA2TierList.Persistence;
 
 namespace DOTA2TierList.API.Controllers
 {
@@ -27,16 +28,24 @@ namespace DOTA2TierList.API.Controllers
 
         private readonly JwtOptions _jwtOptions;
 
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        private readonly ApplicationContext _dbContext;
+
         public UserController(
             IUserService userService,
             IMapper mapper,
             IValidator<IUserRequest> validator,
-            IOptions<JwtOptions> options)
+            IOptions<JwtOptions> options,
+            IHttpClientFactory httpClientFactory,
+            ApplicationContext dbContext)
         {
             _userService = userService;
             _mapper = mapper;
             _validator = validator;
             _jwtOptions = options.Value;
+            _httpClientFactory = httpClientFactory;
+            _dbContext = dbContext;
         }
 
 
@@ -51,24 +60,23 @@ namespace DOTA2TierList.API.Controllers
         [HttpGet("[action]")]
         public async Task<IActionResult> VerifySteam()
         {
-            var queryParams = Request.QueryString;
-
-            var verifyAuthUrl = _userService.GetVerifyAuthUrl(queryParams.ToString());
+            var verifyAuthUrl = _userService.GetVerifyAuthUrl(Request.QueryString.ToString());
 
             if (verifyAuthUrl == null) { 
                 return Unauthorized();
             }
 
-            using var client = new HttpClient();
+            var steamClient = _httpClientFactory.CreateClient("SteamAuth");
+
             try
             {
-                var verifyResult = await client.GetAsync(verifyAuthUrl);
+                var verifyResult = await steamClient.GetAsync(verifyAuthUrl);
 
                 if (verifyResult.IsSuccessStatusCode)
                 {
                     var content = await verifyResult.Content.ReadAsStringAsync();
-                    var isAuth = _userService.IsSuccessSteamAuth(content);
 
+                    var isAuth = _userService.IsSuccessSteamAuth(content);
 
                     if (!isAuth)
                     {
@@ -96,7 +104,6 @@ namespace DOTA2TierList.API.Controllers
         }
         private async Task<ActionResult> SteamLogin(string claimedIdUrl)
         {
-
             (var accessToken, var refreshToken) = await _userService.SteamLogin(claimedIdUrl);
 
             Response.Cookies.Append(_jwtOptions.CookieAccessKey, accessToken,

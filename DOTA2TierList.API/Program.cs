@@ -16,11 +16,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAutoMapper(typeof(DtoUserMappingProfile).Assembly, typeof(DaoMappingProfile).Assembly);
 
-
-
 builder.Services.AddDbContext<ApplicationContext>(options => 
     options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
 
+builder.Services.AddHttpClient("SteamAuth", client =>
+{
+    client.BaseAddress = new Uri("https://steamcommunity.com/openid/login/");
+    client.DefaultRequestHeaders.Add("Accept", "application/json");
+});
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
 builder.Services.Configure<SteamAuthOptions>(builder.Configuration.GetSection(nameof(SteamAuthOptions)));
@@ -32,6 +35,7 @@ builder.Services.AddAntiforgery();
 builder.Services.AddAutoMapper(typeof(DtoUserMappingProfile).Assembly, typeof(DaoMappingProfile).Assembly);
 
 builder.Services.AddValidatorsFromAssemblyContaining<UserRequestValidator>();
+
 
 builder.Services.AddUserService();
 builder.Services.AddTierListService();

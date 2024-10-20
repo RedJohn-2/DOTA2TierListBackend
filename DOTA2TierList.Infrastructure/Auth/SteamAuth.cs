@@ -14,6 +14,7 @@ namespace DOTA2TierList.Infrastructure.Auth
         private readonly SteamAuthOptions _steamAuthOptions;
         private const string SteamAuthBaseUrl = "https://steamcommunity.com/openid/login";
         private const string DefualtNsString = "http://specs.openid.net/auth/2.0";
+
         public SteamAuth(IOptions<SteamAuthOptions> options)
         {
             _steamAuthOptions = options.Value;
@@ -23,8 +24,7 @@ namespace DOTA2TierList.Infrastructure.Auth
         {
             var realm = GetBaseAddress(new Uri(returnUrl));
 
-            var url = SteamAuthBaseUrl +
-                $"?openid.claimed_id={HttpUtility.UrlEncode(_steamAuthOptions.ClaimedId)}" +
+            var url = $"?openid.claimed_id={HttpUtility.UrlEncode(_steamAuthOptions.ClaimedId)}" +
                 $"&openid.identity={HttpUtility.UrlEncode(_steamAuthOptions.Identity)}" +
                 $"&openid.mode={HttpUtility.UrlEncode(_steamAuthOptions.Mode)}" +
                 $"&openid.ns={HttpUtility.UrlEncode(_steamAuthOptions.Ns)}" +
